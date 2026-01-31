@@ -1,3 +1,11 @@
+:root {
+  --space-bg-1: #1a1a2e;
+  --space-bg-2: #16213e;
+  --accent-pink: #ff006e;
+  --accent-cyan: #00d4ff;
+  --text-light: #e8eef7;
+}
+
 .app {
   display: flex;
   height: 100vh;

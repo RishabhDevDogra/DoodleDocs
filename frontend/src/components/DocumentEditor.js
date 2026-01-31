@@ -69,13 +69,16 @@ function DocumentEditor({ document: doc, onUpdate }) {
     setIsSaving(false);
   }, [doc.id, title, onUpdate]);
 
+  // Auto-save on title change only (debounced)
   useEffect(() => {
     const timer = setTimeout(() => {
-      handleSave();
-    }, 2000);
+      if (title !== doc.title) {
+        handleSave();
+      }
+    }, 1000);
 
     return () => clearTimeout(timer);
-  }, [title, handleSave]);
+  }, [title, doc.title, handleSave]);
 
   const startDrawing = ({ nativeEvent }) => {
     const { offsetX, offsetY } = nativeEvent;
@@ -94,6 +97,10 @@ function DocumentEditor({ document: doc, onUpdate }) {
   const stopDrawing = () => {
     if (contextRef.current) {
       contextRef.current.closePath();
+    }
+    if (isDrawing) {
+      // Save after drawing stops
+      setTimeout(() => handleSave(), 500);
     }
     setIsDrawing(false);
   };
@@ -130,13 +137,16 @@ function DocumentEditor({ document: doc, onUpdate }) {
   return (
     <div className="editor-container">
       <div className="editor-header">
-        <input
-          type="text"
-          className="doc-title-input"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Drawing title"
-        />
+        <div className="title-section">
+          <label className="title-label">📄 TITLE:</label>
+          <input
+            type="text"
+            className="doc-title-input"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Click here to name your document..."
+          />
+        </div>
         <div className="save-status">
           {isSaving && <span className="saving">Saving...</span>}
           {!isSaving && lastSaved && (
@@ -145,24 +155,23 @@ function DocumentEditor({ document: doc, onUpdate }) {
         </div>
       </div>
       <div className="editor-toolbar">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <label style={{ color: 'var(--text-light)', fontSize: '12px', fontWeight: '600' }}>Color:</label>
+        <div className="toolbar-group">
+          <label className="toolbar-label">Color:</label>
           <input 
             type="color"
             value={brushColor}
             onChange={(e) => setBrushColor(e.target.value)}
-            style={{ cursor: 'pointer', width: '40px', height: '36px', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px' }}
+            className="color-picker"
             title="Brush Color"
           />
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <label style={{ color: 'var(--text-light)', fontSize: '12px', fontWeight: '600' }}>Size:</label>
+        <div className="toolbar-group">
+          <label className="toolbar-label">Size:</label>
           <select 
             className="toolbar-select"
             value={brushSize}
             onChange={(e) => setBrushSize(parseInt(e.target.value))}
             title="Brush Size"
-            style={{ minWidth: '70px' }}
           >
             <option value={1}>1px</option>
             <option value={2}>2px</option>
