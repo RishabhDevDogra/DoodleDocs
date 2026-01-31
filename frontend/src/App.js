@@ -15,12 +15,20 @@ function App() {
   useEffect(() => {
     const connection = new signalR.HubConnectionBuilder()
       .withUrl('http://localhost:5116/hubs/document')
-      .withAutomaticReconnect()
+      .withAutomaticReconnect([1000, 2000, 5000, 10000]) // Exponential backoff
       .build();
 
-    connection.start()
-      .then(() => console.log('SignalR Connected'))
-      .catch(err => console.error('SignalR Connection Error:', err));
+    // Add a 500ms delay before connecting to allow backend to fully initialize
+    const connectionTimer = setTimeout(() => {
+      connection.start()
+        .then(() => console.log('SignalR Connected'))
+        .catch(err => {
+          // Suppress initial negotiation errors - they're normal during startup
+          if (!err.message?.includes('negotiation')) {
+            console.error('SignalR Connection Error:', err);
+          }
+        });
+    }, 500);
 
     // Listen for document created
     connection.on('DocumentCreated', (documentId, title) => {
@@ -48,6 +56,7 @@ function App() {
     });
 
     return () => {
+      clearTimeout(connectionTimer);
       connection.stop();
     };
   }, [selectedDocId]);
