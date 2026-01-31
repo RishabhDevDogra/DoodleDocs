@@ -1,4 +1,4 @@
-using DoodleDocs;
+using DoodleDocs.Application;
 using DoodleDocs.Infrastructure;
 using DoodleDocs.ReadModel;
 
