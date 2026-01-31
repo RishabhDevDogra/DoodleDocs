@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using DoodleDocs.ReadModel;
 using DoodleDocs.Application;
+using DoodleDocs.Application.Requests;
 
 namespace DoodleDocs.Controllers;
 
@@ -29,6 +30,13 @@ public class DocumentController : ControllerBase
         if (doc == null)
             return NotFound();
         return Ok(doc);
+    }
+
+    [HttpGet("{id}/history")]
+    public async Task<ActionResult<List<EventView>>> GetEventHistory(string id)
+    {
+        var history = await _documentService.GetEventHistoryAsync(id);
+        return Ok(history);
     }
 
     [HttpPost]

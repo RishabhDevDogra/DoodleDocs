@@ -40,6 +40,33 @@ public class DocumentService
     }
 
     /// <summary>
+    /// Get event history for a document (for undo/redo and version history).
+    /// </summary>
+    public async Task<List<EventView>> GetEventHistoryAsync(string id)
+    {
+        var events = await _eventStore.GetEventsAsync(id);
+        return events.Select(e => new EventView
+        {
+            Version = e.Version,
+            EventType = e.GetType().Name,
+            Description = GetEventDescription(e),
+            OccurredAt = e.OccurredAt
+        }).ToList();
+    }
+
+    private string GetEventDescription(Domain.DomainEvent @event)
+    {
+        return @event switch
+        {
+            Domain.DocumentCreated created => $"Document created: \"{created.Title}\"",
+            Domain.ContentUpdated updated => $"Content {(updated.Content.Length > 0 ? "updated" : "cleared")}",
+            Domain.TitleUpdated titleUpdated => $"Title changed to \"{titleUpdated.NewTitle}\"",
+            Domain.DocumentDeleted => "Document deleted",
+            _ => "Unknown event"
+        };
+    }
+
+    /// <summary>
     /// Create a new document.
     /// </summary>
     public async Task<DocumentProjection?> CreateDocumentAsync(string title = "Untitled Document")
