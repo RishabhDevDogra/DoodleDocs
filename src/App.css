@@ -1,38 +1,95 @@
-.App {
-  text-align: center;
+.app {
+  display: flex;
+  height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  font-family: 'Arial', sans-serif;
+  overflow: hidden;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  max-width: 280px;
+  border-right: 3px solid #ff006e;
+  padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #0f3460;
+  box-shadow: 4px 0 20px rgba(255, 0, 110, 0.3);
   display: flex;
   flex-direction: column;
+}
+
+.search-box {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 2px solid #00d4ff;
+  background: rgba(0, 212, 255, 0.1);
+  border-radius: 12px;
+  color: #00d4ff;
+  font-weight: bold;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.search-box::placeholder {
+  color: rgba(0, 212, 255, 0.5);
+}
+
+.search-box:focus {
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+}
+
+.new-doc-btn {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #ff006e, #ff5c8a);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+  transition: all 0.3s;
+  box-shadow: 0 6px 20px rgba(255, 0, 110, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.new-doc-btn:hover {
+  background: linear-gradient(135deg, #ff5c8a, #ff006e);
+  box-shadow: 0 8px 25px rgba(255, 0, 110, 0.6);
+  transform: translateY(-2px);
+}
+
+.new-doc-btn:active {
+  transform: translateY(0);
+}
+
+.editor-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.no-doc {
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  height: 100%;
+  color: #00d4ff;
+  font-size: 24px;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background: #1a1a2e;
 }

@@ -1,0 +1,100 @@
+.document-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.empty-state {
+  color: #00d4ff;
+  font-size: 13px;
+  text-align: center;
+  padding: 20px 0;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.doc-item {
+  padding: 14px;
+  margin-bottom: 4px;
+  border-radius: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s;
+  background: rgba(255, 0, 110, 0.1);
+  border: 2px solid transparent;
+}
+
+.doc-item:hover {
+  background: rgba(255, 0, 110, 0.2);
+  border-color: #ff006e;
+  box-shadow: 0 4px 15px rgba(255, 0, 110, 0.2);
+  transform: translateX(5px);
+}
+
+.doc-item.active {
+  background: linear-gradient(135deg, rgba(255, 0, 110, 0.3), rgba(0, 212, 255, 0.1));
+  border: 2px solid #00d4ff;
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+}
+
+.doc-info {
+  flex: 1;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.doc-item h3 {
+  margin: 0 0 6px 0;
+  font-size: 14px;
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.doc-item p {
+  margin: 0;
+  font-size: 11px;
+  color: #00d4ff;
+  text-transform: uppercase;
+}
+
+.doc-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: 8px;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 6px;
+  transition: all 0.3s;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.duplicate-btn {
+  color: #00d4ff;
+}
+
+.duplicate-btn:hover {
+  background: rgba(0, 212, 255, 0.2);
+  transform: scale(1.15);
+}
+
+.delete-btn {
+  color: #ff006e;
+}
+
+.delete-btn:hover {
+  background: rgba(255, 0, 110, 0.2);
+  transform: scale(1.15);
+}
