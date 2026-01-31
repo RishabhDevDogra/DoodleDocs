@@ -39,6 +39,15 @@ public class DocumentController : ControllerBase
         return Ok(history);
     }
 
+    [HttpGet("{id}/version/{version}")]
+    public async Task<ActionResult<DocumentProjection>> GetDocumentAtVersion(string id, int version)
+    {
+        var doc = await _documentService.GetDocumentAtVersionAsync(id, version);
+        if (doc == null)
+            return NotFound();
+        return Ok(doc);
+    }
+
     [HttpPost]
     public async Task<ActionResult<DocumentProjection>> CreateDocument([FromBody] CreateDocumentRequest request)
     {

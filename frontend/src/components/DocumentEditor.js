@@ -9,12 +9,30 @@ function DocumentEditor({ document: doc, onUpdate }) {
   const [isDrawing, setIsDrawing] = useState(false);
   const [brushColor, setBrushColor] = useState('#000000');
   const [brushSize, setBrushSize] = useState(2);
+  const [currentVersion, setCurrentVersion] = useState(0);
+  const [maxVersion, setMaxVersion] = useState(0);
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
 
   useEffect(() => {
     setTitle(doc.title);
     setContent(doc.content);
+    
+    // Fetch event history to determine current version
+    const fetchVersion = async () => {
+      try {
+        const res = await fetch(`http://localhost:5116/api/document/${doc.id}/history`);
+        if (res.ok) {
+          const events = await res.json();
+          const latestVersion = events.length > 0 ? events[events.length - 1].version : 0;
+          setCurrentVersion(latestVersion);
+          setMaxVersion(latestVersion);
+        }
+      } catch (err) {
+        console.error('Error fetching version:', err);
+      }
+    };
+    fetchVersion();
   }, [doc]);
 
   useEffect(() => {
@@ -134,6 +152,76 @@ function DocumentEditor({ document: doc, onUpdate }) {
     }
   };
 
+  const handleUndo = async () => {
+    if (currentVersion <= 1) return; // Can't undo past version 1
+    
+    const targetVersion = currentVersion - 1;
+    try {
+      const res = await fetch(`http://localhost:5116/api/document/${doc.id}/version/${targetVersion}`);
+      if (res.ok) {
+        const versionDoc = await res.json();
+        setTitle(versionDoc.title);
+        setContent(versionDoc.content);
+        setCurrentVersion(targetVersion);
+        
+        // Reload canvas with restored content
+        if (canvasRef.current && contextRef.current) {
+          const canvas = canvasRef.current;
+          const context = contextRef.current;
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          
+          if (versionDoc.content && versionDoc.content.includes('data:image')) {
+            const match = versionDoc.content.match(/src="(data:image[^"]*)"/);  
+            if (match && match[1]) {
+              const img = new Image();
+              img.onload = () => {
+                context.drawImage(img, 0, 0);
+              };
+              img.src = match[1];
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error during undo:', err);
+    }
+  };
+
+  const handleRedo = async () => {
+    if (currentVersion >= maxVersion) return; // Can't redo past max version
+    
+    const targetVersion = currentVersion + 1;
+    try {
+      const res = await fetch(`http://localhost:5116/api/document/${doc.id}/version/${targetVersion}`);
+      if (res.ok) {
+        const versionDoc = await res.json();
+        setTitle(versionDoc.title);
+        setContent(versionDoc.content);
+        setCurrentVersion(targetVersion);
+        
+        // Reload canvas with restored content
+        if (canvasRef.current && contextRef.current) {
+          const canvas = canvasRef.current;
+          const context = contextRef.current;
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          
+          if (versionDoc.content && versionDoc.content.includes('data:image')) {
+            const match = versionDoc.content.match(/src="(data:image[^"]*)"/);  
+            if (match && match[1]) {
+              const img = new Image();
+              img.onload = () => {
+                context.drawImage(img, 0, 0);
+              };
+              img.src = match[1];
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error during redo:', err);
+    }
+  };
+
   return (
     <div className="editor-container">
       <div className="editor-header">
@@ -155,6 +243,23 @@ function DocumentEditor({ document: doc, onUpdate }) {
         </div>
       </div>
       <div className="editor-toolbar">
+        <button 
+          className="toolbar-btn"
+          onClick={handleUndo}
+          disabled={currentVersion <= 1}
+          title="Undo (Ctrl+Z)"
+        >
+          ↶ Undo
+        </button>
+        <button 
+          className="toolbar-btn"
+          onClick={handleRedo}
+          disabled={currentVersion >= maxVersion}
+          title="Redo (Ctrl+Y)"
+        >
+          ↷ Redo
+        </button>
+        <div className="toolbar-divider"></div>
         <div className="toolbar-group">
           <label className="toolbar-label">Color:</label>
           <input 

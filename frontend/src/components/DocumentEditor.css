@@ -146,6 +146,13 @@
   gap: 8px;
 }
 
+.toolbar-divider {
+  width: 2px;
+  height: 30px;
+  background: linear-gradient(180deg, transparent, rgba(0, 212, 255, 0.5), transparent);
+  margin: 0 8px;
+}
+
 .toolbar-label {
   color: #ffffff;
   font-size: 12px;
@@ -223,6 +230,18 @@
 .toolbar-btn:active {
   transform: translateY(0);
   box-shadow: 0 2px 8px rgba(0, 212, 255, 0.3);
+}
+
+.toolbar-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: rgba(0, 212, 255, 0.2);
+}
+
+.toolbar-btn:disabled:hover {
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 212, 255, 0.15);
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(0, 212, 255, 0.12));
 }
 
 .toolbar-select {

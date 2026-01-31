@@ -54,6 +54,34 @@ public class DocumentService
         }).ToList();
     }
 
+    /// <summary>
+    /// Get document state at a specific version by replaying events up to that version.
+    /// This enables undo/redo functionality.
+    /// </summary>
+    public async Task<DocumentProjection?> GetDocumentAtVersionAsync(string id, int version)
+    {
+        var events = await _eventStore.GetEventsAsync(id);
+        if (events.Count == 0)
+            return null;
+
+        // Replay events up to the specified version
+        var eventsToReplay = events.Where(e => e.Version <= version).ToList();
+        if (eventsToReplay.Count == 0)
+            return null;
+
+        var aggregate = DocumentAggregate.FromEvents(eventsToReplay);
+
+        // Convert aggregate state to projection
+        return new DocumentProjection
+        {
+            Id = aggregate.Id,
+            Title = aggregate.Title,
+            Content = aggregate.Content,
+            CreatedAt = aggregate.CreatedAt,
+            UpdatedAt = aggregate.UpdatedAt
+        };
+    }
+
     private string GetEventDescription(Domain.DomainEvent @event)
     {
         return @event switch
