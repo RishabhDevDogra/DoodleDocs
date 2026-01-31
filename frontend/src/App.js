@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import DocumentList from './components/DocumentList';
 import DocumentEditor from './components/DocumentEditor';
+import VersionHistory from './components/VersionHistory';
 
 function App() {
   const [documents, setDocuments] = useState([]);
@@ -135,6 +136,9 @@ function App() {
             <p>Select or create a document to start editing</p>
           </div>
         )}
+      </div>
+      <div className="version-history-panel">
+        {selectedDoc && <VersionHistory documentId={selectedDoc.id} />}
       </div>
     </div>
   );
