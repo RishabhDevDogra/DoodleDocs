@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import * as signalR from '@microsoft/signalr';
 import './App.css';
 import DocumentList from './components/DocumentList';
 import DocumentEditor from './components/DocumentEditor';
@@ -9,6 +10,47 @@ function App() {
   const [selectedDocId, setSelectedDocId] = useState(null);
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Set up SignalR connection for real-time updates
+  useEffect(() => {
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl('http://localhost:5116/hubs/document')
+      .withAutomaticReconnect()
+      .build();
+
+    connection.start()
+      .then(() => console.log('SignalR Connected'))
+      .catch(err => console.error('SignalR Connection Error:', err));
+
+    // Listen for document created
+    connection.on('DocumentCreated', (documentId, title) => {
+      console.log('Document created:', documentId, title);
+      fetchDocuments(); // Refresh document list
+    });
+
+    // Listen for document updated
+    connection.on('DocumentUpdated', (documentId) => {
+      console.log('Document updated:', documentId);
+      fetchDocuments(); // Refresh document list
+      if (selectedDocId === documentId) {
+        fetchDocument(documentId); // Refresh selected document
+      }
+    });
+
+    // Listen for document deleted
+    connection.on('DocumentDeleted', (documentId) => {
+      console.log('Document deleted:', documentId);
+      fetchDocuments(); // Refresh document list
+      if (selectedDocId === documentId) {
+        setSelectedDocId(null);
+        setSelectedDoc(null);
+      }
+    });
+
+    return () => {
+      connection.stop();
+    };
+  }, [selectedDocId]);
 
   // Fetch all documents on mount
   useEffect(() => {

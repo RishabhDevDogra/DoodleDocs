@@ -1,11 +1,13 @@
 using DoodleDocs.Domain;
 using DoodleDocs.Infrastructure;
 using DoodleDocs.ReadModel;
+using DoodleDocs.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace DoodleDocs.Application;
 
 /// <summary>
-/// Event-sourced Document Service with CQRS.
+/// Event-sourced Document Service with CQRS and real-time SignalR broadcasts.
 /// Commands mutate aggregates, which generate events.
 /// Events are persisted to the event store AND projected into read model.
 /// State is reconstructed by replaying events or reading from projections.
@@ -15,12 +17,18 @@ public class DocumentService
     private readonly IEventStore _eventStore;
     private readonly IProjectionStore _projectionStore;
     private readonly IEventHandler _eventHandler;
+    private readonly IHubContext<DocumentHub> _hubContext;
 
-    public DocumentService(IEventStore eventStore, IProjectionStore projectionStore, IEventHandler eventHandler)
+    public DocumentService(
+        IEventStore eventStore, 
+        IProjectionStore projectionStore, 
+        IEventHandler eventHandler,
+        IHubContext<DocumentHub> hubContext)
     {
         _eventStore = eventStore;
         _projectionStore = projectionStore;
         _eventHandler = eventHandler;
+        _hubContext = hubContext;
     }
 
     /// <summary>
@@ -111,6 +119,9 @@ public class DocumentService
             await _eventHandler.HandleAsync(@event);
         }
 
+        // Broadcast to all clients via SignalR
+        await _hubContext.Clients.All.SendAsync("DocumentCreated", documentId, title);
+
         return await _projectionStore.GetProjectionAsync(documentId);
     }
 
@@ -143,6 +154,9 @@ public class DocumentService
             {
                 await _eventHandler.HandleAsync(@event);
             }
+
+            // Broadcast to all clients via SignalR
+            await _hubContext.Clients.All.SendAsync("DocumentUpdated", id);
         }
 
         return await _projectionStore.GetProjectionAsync(id);
@@ -169,6 +183,9 @@ public class DocumentService
         {
             await _eventHandler.HandleAsync(@event);
         }
+
+        // Broadcast to all clients via SignalR
+        await _hubContext.Clients.All.SendAsync("DocumentDeleted", id);
 
         return true;
     }

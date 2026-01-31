@@ -1,6 +1,7 @@
 using DoodleDocs.Application;
 using DoodleDocs.Infrastructure;
 using DoodleDocs.ReadModel;
+using DoodleDocs.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,11 +27,15 @@ builder.Services.AddSingleton<IEventHandler, DocumentEventHandler>();
 // Register application service
 builder.Services.AddSingleton<DocumentService>();
 
+// Add SignalR for real-time updates
+builder.Services.AddSignalR();
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
 app.UseCors("AllowReact");
 app.MapControllers();
+app.MapHub<DocumentHub>("/hubs/document");
 
 app.Run();
