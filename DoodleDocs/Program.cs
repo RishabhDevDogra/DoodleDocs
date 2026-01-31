@@ -1,4 +1,6 @@
 using DoodleDocs;
+using DoodleDocs.Infrastructure;
+using DoodleDocs.ReadModel;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +16,16 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Register Event Sourcing (write side)
+builder.Services.AddSingleton<IEventStore, InMemoryEventStore>();
+
+// Register CQRS (read side)
+builder.Services.AddSingleton<IProjectionStore, InMemoryProjectionStore>();
+builder.Services.AddSingleton<IEventHandler, DocumentEventHandler>();
+
+// Register application service
 builder.Services.AddSingleton<DocumentService>();
+
 builder.Services.AddControllers();
 
 var app = builder.Build();

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using DoodleDocs.ReadModel;
 
 namespace DoodleDocs;
 
@@ -14,33 +15,34 @@ public class DocumentController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<List<Document>> GetAll()
+    public async Task<ActionResult<List<DocumentProjection>>> GetAll()
     {
-        return Ok(_documentService.GetAllDocuments());
+        var docs = await _documentService.GetAllDocumentsAsync();
+        return Ok(docs);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Document> GetDocument(string id)
+    public async Task<ActionResult<DocumentProjection>> GetDocument(string id)
     {
-        var doc = _documentService.GetDocument(id);
+        var doc = await _documentService.GetDocumentAsync(id);
         if (doc == null)
             return NotFound();
         return Ok(doc);
     }
 
     [HttpPost]
-    public ActionResult<Document> CreateDocument([FromBody] CreateDocumentRequest request)
+    public async Task<ActionResult<DocumentProjection>> CreateDocument([FromBody] CreateDocumentRequest request)
     {
-        var doc = _documentService.CreateDocument(request.Title ?? "Untitled Document");
-        return CreatedAtAction(nameof(GetDocument), new { id = doc.Id }, doc);
+        var doc = await _documentService.CreateDocumentAsync(request.Title ?? "Untitled Document");
+        return CreatedAtAction(nameof(GetDocument), new { id = doc?.Id }, doc);
     }
 
     [HttpPut("{id}")]
-    public ActionResult<Document> UpdateDocument(string id, [FromBody] UpdateDocumentRequest request)
+    public async Task<ActionResult<DocumentProjection>> UpdateDocument(string id, [FromBody] UpdateDocumentRequest request)
     {
         try
         {
-            var doc = _documentService.UpdateDocument(id, request.Title, request.Content);
+            var doc = await _documentService.UpdateDocumentAsync(id, request.Title, request.Content);
             return Ok(doc);
         }
         catch (KeyNotFoundException)
@@ -50,13 +52,14 @@ public class DocumentController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public ActionResult DeleteDocument(string id)
+    public async Task<ActionResult> DeleteDocument(string id)
     {
-        if (_documentService.DeleteDocument(id))
+        if (await _documentService.DeleteDocumentAsync(id))
             return Ok();
         return NotFound();
     }
 }
+
 
 public class CreateDocumentRequest
 {
