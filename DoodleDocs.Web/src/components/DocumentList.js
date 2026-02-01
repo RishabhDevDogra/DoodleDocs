@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './DocumentList.css';
 
 function DocumentList({ documents, selectedDocId, onSelectDoc, onDeleteDoc, onDuplicateDoc }) {
@@ -46,5 +47,17 @@ function DocumentList({ documents, selectedDocId, onSelectDoc, onDeleteDoc, onDu
     </div>
   );
 }
+
+DocumentList.propTypes = {
+  documents: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    updatedAt: PropTypes.string.isRequired
+  })).isRequired,
+  selectedDocId: PropTypes.string,
+  onSelectDoc: PropTypes.func.isRequired,
+  onDeleteDoc: PropTypes.func.isRequired,
+  onDuplicateDoc: PropTypes.func.isRequired
+};
 
 export default DocumentList;

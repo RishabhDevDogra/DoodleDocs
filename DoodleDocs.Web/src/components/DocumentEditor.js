@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import PropTypes from 'prop-types';
+import { API_URL, TITLE_SAVE_DELAY_MS, CANVAS_SAVE_DELAY_MS } from '../config';
 import './DocumentEditor.css';
 
 function DocumentEditor({ document: doc, onUpdate }) {
@@ -21,7 +23,7 @@ function DocumentEditor({ document: doc, onUpdate }) {
     // Fetch event history to determine current version
     const fetchVersion = async () => {
       try {
-        const res = await fetch(`http://localhost:5116/api/document/${doc.id}/history`);
+        const res = await fetch(`${API_URL}/api/document/${doc.id}/history`);
         if (res.ok) {
           const events = await res.json();
           const latestVersion = events.length > 0 ? events[events.length - 1].version : 0;
@@ -93,7 +95,7 @@ function DocumentEditor({ document: doc, onUpdate }) {
       if (title !== doc.title) {
         handleSave();
       }
-    }, 1000);
+    }, TITLE_SAVE_DELAY_MS);
 
     return () => clearTimeout(timer);
   }, [title, doc.title, handleSave]);
@@ -118,7 +120,7 @@ function DocumentEditor({ document: doc, onUpdate }) {
     }
     if (isDrawing) {
       // Save after drawing stops
-      setTimeout(() => handleSave(), 500);
+      setTimeout(() => handleSave(), CANVAS_SAVE_DELAY_MS);
     }
     setIsDrawing(false);
   };
@@ -157,7 +159,7 @@ function DocumentEditor({ document: doc, onUpdate }) {
     
     const targetVersion = currentVersion - 1;
     try {
-      const res = await fetch(`http://localhost:5116/api/document/${doc.id}/version/${targetVersion}`);
+      const res = await fetch(`${API_URL}/api/document/${doc.id}/version/${targetVersion}`);
       if (res.ok) {
         const versionDoc = await res.json();
         setTitle(versionDoc.title);
@@ -192,7 +194,7 @@ function DocumentEditor({ document: doc, onUpdate }) {
     
     const targetVersion = currentVersion + 1;
     try {
-      const res = await fetch(`http://localhost:5116/api/document/${doc.id}/version/${targetVersion}`);
+      const res = await fetch(`${API_URL}/api/document/${doc.id}/version/${targetVersion}`);
       if (res.ok) {
         const versionDoc = await res.json();
         setTitle(versionDoc.title);
@@ -321,5 +323,14 @@ function DocumentEditor({ document: doc, onUpdate }) {
     </div>
   );
 }
+
+DocumentEditor.propTypes = {
+  document: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    content: PropTypes.string
+  }).isRequired,
+  onUpdate: PropTypes.func.isRequired
+};
 
 export default DocumentEditor;

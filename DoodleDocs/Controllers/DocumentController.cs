@@ -51,13 +51,25 @@ public class DocumentController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<DocumentProjection>> CreateDocument([FromBody] CreateDocumentRequest request)
     {
-        var doc = await _documentService.CreateDocumentAsync(request.Title ?? "Untitled Document");
+        if (request == null)
+            return BadRequest("Request body is required");
+            
+        if (string.IsNullOrWhiteSpace(request.Title))
+            return BadRequest("Title cannot be empty");
+
+        var doc = await _documentService.CreateDocumentAsync(request.Title);
         return CreatedAtAction(nameof(GetDocument), new { id = doc?.Id }, doc);
     }
 
     [HttpPut("{id}")]
     public async Task<ActionResult<DocumentProjection>> UpdateDocument(string id, [FromBody] UpdateDocumentRequest request)
     {
+        if (string.IsNullOrWhiteSpace(id))
+            return BadRequest("Document ID is required");
+            
+        if (request == null)
+            return BadRequest("Request body is required");
+
         try
         {
             var doc = await _documentService.UpdateDocumentAsync(id, request.Title, request.Content);
@@ -72,6 +84,9 @@ public class DocumentController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteDocument(string id)
     {
+        if (string.IsNullOrWhiteSpace(id))
+            return BadRequest("Document ID is required");
+            
         if (await _documentService.DeleteDocumentAsync(id))
             return Ok();
         return NotFound();

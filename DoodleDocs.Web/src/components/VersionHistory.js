@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import PropTypes from 'prop-types';
+import { API_URL } from '../config';
 import './VersionHistory.css';
 
 function VersionHistory({ documentId, onRevert }) {
@@ -8,7 +10,7 @@ function VersionHistory({ documentId, onRevert }) {
   const fetchEventHistory = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:5116/api/document/${documentId}/history`);
+      const res = await fetch(`${API_URL}/api/document/${documentId}/history`);
       if (res.ok) {
         const data = await res.json();
         setEvents(data);
@@ -82,5 +84,10 @@ function VersionHistory({ documentId, onRevert }) {
     </div>
   );
 }
+
+VersionHistory.propTypes = {
+  documentId: PropTypes.string,
+  onRevert: PropTypes.func
+};
 
 export default VersionHistory;

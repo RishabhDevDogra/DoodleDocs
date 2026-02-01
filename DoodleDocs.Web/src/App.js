@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as signalR from '@microsoft/signalr';
+import { API_URL, HUB_URL, SIGNALR_RECONNECT_DELAYS, SIGNALR_STARTUP_DELAY_MS } from './config';
 import './App.css';
 import DocumentList from './components/DocumentList';
 import DocumentEditor from './components/DocumentEditor';
@@ -14,11 +15,11 @@ function App() {
   // Set up SignalR connection for real-time updates
   useEffect(() => {
     const connection = new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:5116/hubs/document')
-      .withAutomaticReconnect([1000, 2000, 5000, 10000]) // Exponential backoff
+      .withUrl(HUB_URL)
+      .withAutomaticReconnect(SIGNALR_RECONNECT_DELAYS)
       .build();
 
-    // Add a 500ms delay before connecting to allow backend to fully initialize
+    // Add a delay before connecting to allow backend to fully initialize
     const connectionTimer = setTimeout(() => {
       connection.start()
         .then(() => console.log('SignalR Connected'))
@@ -28,7 +29,7 @@ function App() {
             console.error('SignalR Connection Error:', err);
           }
         });
-    }, 500);
+    }, SIGNALR_STARTUP_DELAY_MS);
 
     // Listen for document created
     connection.on('DocumentCreated', (documentId, title) => {
@@ -75,7 +76,7 @@ function App() {
 
   const fetchDocuments = async () => {
     try {
-      const res = await fetch('http://localhost:5116/api/document');
+      const res = await fetch(`${API_URL}/api/document`);
       const data = await res.json();
       setDocuments(data);
     } catch (err) {
@@ -85,7 +86,7 @@ function App() {
 
   const fetchDocument = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5116/api/document/${id}`);
+      const res = await fetch(`${API_URL}/api/document/${id}`);
       const data = await res.json();
       setSelectedDoc(data);
     } catch (err) {
@@ -95,7 +96,7 @@ function App() {
 
   const createNewDocument = async () => {
     try {
-      const res = await fetch('http://localhost:5116/api/document', {
+      const res = await fetch(`${API_URL}/api/document`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: 'New Document' })
@@ -110,7 +111,7 @@ function App() {
 
   const updateDocument = async (id, title, content) => {
     try {
-      const res = await fetch(`http://localhost:5116/api/document/${id}`, {
+      const res = await fetch(`${API_URL}/api/document/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title, content })
@@ -125,7 +126,7 @@ function App() {
 
   const deleteDocument = async (id) => {
     try {
-      await fetch(`http://localhost:5116/api/document/${id}`, { method: 'DELETE' });
+      await fetch(`${API_URL}/api/document/${id}`, { method: 'DELETE' });
       setDocuments(documents.filter(d => d.id !== id));
       if (selectedDocId === id) {
         setSelectedDocId(null);
@@ -138,14 +139,14 @@ function App() {
 
   const duplicateDocument = async (docToDupe) => {
     try {
-      const res = await fetch('http://localhost:5116/api/document', {
+      const res = await fetch(`${API_URL}/api/document`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: `${docToDupe.title} (Copy)` })
       });
       const newDoc = await res.json();
       // Copy content from original
-      await fetch(`http://localhost:5116/api/document/${newDoc.id}`, {
+      await fetch(`${API_URL}/api/document/${newDoc.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: `${docToDupe.title} (Copy)`, content: docToDupe.content })

@@ -13,7 +13,7 @@ public class DocumentHub : Hub
     /// </summary>
     public async Task NotifyDocumentCreated(string documentId, string title)
     {
-        await Clients.All.SendAsync("DocumentCreated", documentId, title);
+        await Clients.All.SendAsync(HubMethods.DocumentCreated, documentId, title);
     }
 
     /// <summary>
@@ -21,7 +21,7 @@ public class DocumentHub : Hub
     /// </summary>
     public async Task NotifyDocumentUpdated(string documentId)
     {
-        await Clients.All.SendAsync("DocumentUpdated", documentId);
+        await Clients.All.SendAsync(HubMethods.DocumentUpdated, documentId);
     }
 
     /// <summary>
@@ -29,7 +29,7 @@ public class DocumentHub : Hub
     /// </summary>
     public async Task NotifyDocumentDeleted(string documentId)
     {
-        await Clients.All.SendAsync("DocumentDeleted", documentId);
+        await Clients.All.SendAsync(HubMethods.DocumentDeleted, documentId);
     }
 
     /// <summary>
@@ -37,6 +37,6 @@ public class DocumentHub : Hub
     /// </summary>
     public async Task NotifyEventAdded(string documentId, string eventType, string description)
     {
-        await Clients.All.SendAsync("EventAdded", documentId, eventType, description);
+        await Clients.All.SendAsync(HubMethods.EventAdded, documentId, eventType, description);
     }
 }
