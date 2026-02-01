@@ -16,7 +16,8 @@ builder.Services.AddCors(options =>
                 "http://localhost:3001", 
                 "http://127.0.0.1:3001",
                 "http://localhost:80",
-                "http://frontend:80")
+                "http://frontend:80",
+                "https://doodledocs.onrender.com")
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
