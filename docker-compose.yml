@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./DoodleDocs
+      dockerfile: Dockerfile
+    container_name: doodledocs-backend
+    ports:
+      - "5116:5116"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5116
+    networks:
+      - doodledocs-network
+
+  frontend:
+    build:
+      context: ./DoodleDocs.Web
+      dockerfile: Dockerfile
+    container_name: doodledocs-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - doodledocs-network
+
+networks:
+  doodledocs-network:
+    driver: bridge

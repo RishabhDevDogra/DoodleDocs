@@ -1,5 +1,7 @@
 // Frontend configuration constants
-export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5116';
+// In production (Docker), use relative paths; in dev, use localhost
+const isProduction = process.env.NODE_ENV === 'production';
+export const API_URL = process.env.REACT_APP_API_URL || (isProduction ? '' : 'http://localhost:5116');
 export const HUB_URL = `${API_URL}/hubs/document`;
 
 // Auto-save delays (milliseconds)
