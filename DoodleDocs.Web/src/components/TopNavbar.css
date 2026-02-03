@@ -150,13 +150,14 @@
 
 @media (max-width: 768px) {
   .top-navbar {
-    padding: 10px 16px;
+    padding: 10px 12px;
     height: 56px;
-    gap: 12px;
+    gap: 10px;
   }
 
   .navbar-brand {
     min-width: auto;
+    gap: 8px;
   }
 
   .navbar-title {
@@ -167,18 +168,77 @@
     font-size: 24px;
   }
 
+  .navbar-center {
+    flex: 0.5;
+  }
+
+  .user-greeting {
+    font-size: 12px;
+  }
+
+  .user-name {
+    font-size: 12px;
+  }
+
   .navbar-actions {
-    gap: 12px;
+    gap: 8px;
     min-width: auto;
   }
 
   .navbar-create-btn {
-    padding: 8px 14px;
-    font-size: 12px;
+    padding: 8px 12px;
+    font-size: 11px;
+    border-radius: 6px;
   }
 
   .btn-icon {
+    font-size: 14px;
+  }
+
+  .btn-text {
+    display: inline;
+  }
+
+  .doc-count {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-navbar {
+    padding: 8px 10px;
+    height: 52px;
+    gap: 8px;
+  }
+
+  .navbar-brand {
+    gap: 6px;
+  }
+
+  .navbar-title {
     font-size: 16px;
+  }
+
+  .navbar-logo {
+    font-size: 20px;
+  }
+
+  .navbar-center {
+    display: none;
+  }
+
+  .navbar-actions {
+    gap: 6px;
+  }
+
+  .navbar-create-btn {
+    padding: 6px 10px;
+    font-size: 10px;
+  }
+
+  .btn-icon {
+    font-size: 12px;
   }
 
   .btn-text {
@@ -186,7 +246,7 @@
   }
 
   .doc-count {
-    font-size: 10px;
-    padding: 4px 8px;
+    font-size: 9px;
+    padding: 3px 6px;
   }
 }

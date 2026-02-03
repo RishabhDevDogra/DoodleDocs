@@ -140,3 +140,73 @@ body {
   font-family: 'Arial', sans-serif;
   background: #1a1a2e;
 }
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .app-wrapper {
+    height: 100vh;
+  }
+
+  .app {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    border-right: none;
+    border-bottom: 2px solid #ff006e;
+    padding: 12px;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+
+  .editor-area {
+    flex: 1;
+    min-height: 0;
+    order: -1;
+  }
+
+  .version-history-panel {
+    display: none;
+  }
+
+  .new-doc-btn {
+    padding: 12px;
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+
+  .search-box {
+    padding: 10px;
+    margin-bottom: 0;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-wrapper {
+    height: 100vh;
+  }
+
+  .sidebar {
+    max-height: 120px;
+    padding: 8px;
+  }
+
+  .new-doc-btn {
+    padding: 10px;
+    font-size: 12px;
+    margin-bottom: 8px;
+    border-radius: 12px;
+  }
+
+  .search-box {
+    padding: 8px;
+    font-size: 11px;
+  }
+
+  .no-doc {
+    font-size: 16px;
+  }
+}
