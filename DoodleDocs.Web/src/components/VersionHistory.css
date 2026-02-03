@@ -108,6 +108,22 @@
   word-break: break-word;
 }
 
+.event-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.event-user {
+  color: #00d4ff;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 8px rgba(0, 212, 255, 0.3);
+}
+
 .event-time {
   color: rgba(232, 238, 247, 0.7);
   font-size: 11px;

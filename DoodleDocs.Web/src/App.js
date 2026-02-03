@@ -5,12 +5,21 @@ import './App.css';
 import DocumentList from './components/DocumentList';
 import DocumentEditor from './components/DocumentEditor';
 import VersionHistory from './components/VersionHistory';
+import TopNavbar from './components/TopNavbar';
+import { getOrCreateUserId } from './utils/userSession';
 
 function App() {
   const [documents, setDocuments] = useState([]);
   const [selectedDocId, setSelectedDocId] = useState(null);
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [userName, setUserName] = useState('');
+
+  // Initialize user session on mount
+  useEffect(() => {
+    const { userName: uname } = getOrCreateUserId();
+    setUserName(uname);
+  }, []);
 
   // Set up SignalR connection for real-time updates
   useEffect(() => {
@@ -159,38 +168,45 @@ function App() {
   };
 
   return (
-    <div className="app">
-      <div className="sidebar">
-        <button className="new-doc-btn" onClick={createNewDocument}>+ New Document</button>
-        <input
-          type="text"
-          className="search-box"
-          placeholder="Search documents..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <DocumentList
-          documents={documents.filter(d => d.title.toLowerCase().includes(searchTerm.toLowerCase()))}
-          selectedDocId={selectedDocId}
-          onSelectDoc={setSelectedDocId}
-          onDeleteDoc={deleteDocument}
-          onDuplicateDoc={duplicateDocument}
-        />
-      </div>
-      <div className="editor-area">
-        {selectedDoc ? (
-          <DocumentEditor
-            document={selectedDoc}
-            onUpdate={updateDocument}
+    <div className="app-wrapper">
+      <TopNavbar 
+        userName={userName} 
+        onNewDocument={createNewDocument}
+        documentCount={documents.length}
+      />
+      <div className="app">
+        <div className="sidebar">
+          <button className="new-doc-btn" onClick={createNewDocument}>+ New Doodle</button>
+          <input
+            type="text"
+            className="search-box"
+            placeholder="Search doodles..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
-        ) : (
-          <div className="no-doc">
-            <p>Select or create a document to start editing</p>
-          </div>
-        )}
-      </div>
-      <div className="version-history-panel">
-        {selectedDoc && <VersionHistory documentId={selectedDoc.id} />}
+          <DocumentList
+            documents={documents.filter(d => d.title.toLowerCase().includes(searchTerm.toLowerCase()))}
+            selectedDocId={selectedDocId}
+            onSelectDoc={setSelectedDocId}
+            onDeleteDoc={deleteDocument}
+            onDuplicateDoc={duplicateDocument}
+          />
+        </div>
+        <div className="editor-area">
+          {selectedDoc ? (
+            <DocumentEditor
+              document={selectedDoc}
+              onUpdate={updateDocument}
+            />
+          ) : (
+            <div className="no-doc">
+              <p>Select or create a doodle to start drawing</p>
+            </div>
+          )}
+        </div>
+        <div className="version-history-panel">
+          {selectedDoc && <VersionHistory documentId={selectedDoc.id} userName={userName} />}
+        </div>
       </div>
     </div>
   );

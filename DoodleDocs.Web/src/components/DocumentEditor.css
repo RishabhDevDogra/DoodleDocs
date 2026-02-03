@@ -192,12 +192,13 @@
   font-weight: 700;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   text-transform: uppercase;
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 1px;
   box-shadow: 0 2px 8px rgba(0, 212, 255, 0.15),
               inset 0 1px 0 rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
 }
 
 .toolbar-btn::before {
@@ -246,6 +247,7 @@
 
 .toolbar-btn:not(:disabled) {
   color: #ffffff;
+  font-size: 16px;
 }
 
 .toolbar-select {

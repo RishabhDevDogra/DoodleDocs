@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { API_URL } from '../config';
 import './VersionHistory.css';
 
-function VersionHistory({ documentId, onRevert }) {
+function VersionHistory({ documentId, onRevert, userName }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -74,7 +74,10 @@ function VersionHistory({ documentId, onRevert }) {
               </div>
               <div className="event-content">
                 <div className="event-description">{event.description}</div>
-                <div className="event-time">{formatTime(event.occurredAt)}</div>
+                <div className="event-meta">
+                  <span className="event-user">{userName}</span>
+                  <span className="event-time">{formatTime(event.occurredAt)}</span>
+                </div>
               </div>
               <div className="event-version">v{event.version}</div>
             </div>
@@ -87,7 +90,8 @@ function VersionHistory({ documentId, onRevert }) {
 
 VersionHistory.propTypes = {
   documentId: PropTypes.string,
-  onRevert: PropTypes.func
+  onRevert: PropTypes.func,
+  userName: PropTypes.string
 };
 
 export default VersionHistory;

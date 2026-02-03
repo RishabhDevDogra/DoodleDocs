@@ -251,7 +251,7 @@ function DocumentEditor({ document: doc, onUpdate }) {
           disabled={currentVersion <= 1}
           title="Undo (Ctrl+Z)"
         >
-          ↶ Undo
+          ↩️ Undo
         </button>
         <button 
           className="toolbar-btn"
@@ -259,7 +259,7 @@ function DocumentEditor({ document: doc, onUpdate }) {
           disabled={currentVersion >= maxVersion}
           title="Redo (Ctrl+Y)"
         >
-          ↷ Redo
+          ↪️ Redo
         </button>
         <div className="toolbar-divider"></div>
         <div className="toolbar-group">
@@ -295,7 +295,7 @@ function DocumentEditor({ document: doc, onUpdate }) {
           title="Eraser"
           onClick={() => setBrushColor('#FFFFFF')}
         >
-          🧹
+          🧻
         </button>
         <button 
           className="toolbar-btn clear-btn"
