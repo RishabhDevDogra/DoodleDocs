@@ -2,12 +2,14 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { API_URL, TITLE_SAVE_DELAY_MS, CANVAS_SAVE_DELAY_MS } from '../config';
 import './DocumentEditor.css';
+import ShareModal from './ShareModal';
 
 function DocumentEditor({ document: doc, onUpdate }) {
   const [title, setTitle] = useState(doc.title);
   const [content, setContent] = useState(doc.content);
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isDrawing, setIsDrawing] = useState(false);
   const [brushColor, setBrushColor] = useState('#000000');
   const [brushSize, setBrushSize] = useState(2);
@@ -243,6 +245,13 @@ function DocumentEditor({ document: doc, onUpdate }) {
             <span className="saved">✓ Saved</span>
           )}
         </div>
+        <button 
+          className="share-btn"
+          onClick={() => setIsShareModalOpen(true)}
+          title="Share this doodle with friends"
+        >
+          🔗 Share
+        </button>
       </div>
       <div className="editor-toolbar">
         <button 
@@ -319,6 +328,12 @@ function DocumentEditor({ document: doc, onUpdate }) {
         onMouseMove={draw}
         onMouseUp={stopDrawing}
         onMouseLeave={stopDrawing}
+      />
+      <ShareModal 
+        documentId={doc.id}
+        documentTitle={title || 'Untitled'}
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
       />
     </div>
   );

@@ -1,0 +1,242 @@
+.share-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.share-modal {
+  background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+  border: 2px solid #00d4ff;
+  border-radius: 16px;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    0 0 40px rgba(0, 212, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  max-width: 500px;
+  width: 90%;
+  overflow: hidden;
+}
+
+.share-modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 212, 255, 0.05);
+}
+
+.share-modal-header h2 {
+  margin: 0;
+  color: #e8eef7;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.share-modal-close {
+  background: transparent;
+  border: none;
+  color: #00d4ff;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-modal-close:hover {
+  color: #ff006e;
+  transform: rotate(90deg);
+}
+
+.share-modal-content {
+  padding: 24px;
+}
+
+.share-description {
+  margin: 0 0 16px 0;
+  color: #e8eef7;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.share-link-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.share-link-input {
+  flex: 1;
+  padding: 12px 16px;
+  background: rgba(0, 212, 255, 0.08);
+  border: 2px solid rgba(0, 212, 255, 0.3);
+  border-radius: 8px;
+  color: #00d4ff;
+  font-size: 13px;
+  font-weight: 600;
+  outline: none;
+  transition: all 0.2s ease;
+  word-break: break-all;
+}
+
+.share-link-input:focus {
+  background: rgba(0, 212, 255, 0.12);
+  border-color: #00d4ff;
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+.share-copy-btn {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #ff006e, #ff5c8a);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 13px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(255, 0, 110, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.share-copy-btn:hover {
+  background: linear-gradient(135deg, #ff5c8a, #ff006e);
+  box-shadow: 0 6px 20px rgba(255, 0, 110, 0.6);
+  transform: translateY(-2px);
+}
+
+.share-copy-btn.copied {
+  background: linear-gradient(135deg, #00d4ff, #00b8cc);
+  box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+}
+
+.share-methods {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: rgba(0, 212, 255, 0.05);
+  border-radius: 8px;
+}
+
+.share-methods h3 {
+  margin: 0 0 12px 0;
+  color: #e8eef7;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.share-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.share-social-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 2px solid rgba(0, 212, 255, 0.2);
+  background: rgba(0, 212, 255, 0.08);
+  color: #00d4ff;
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.share-social-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+}
+
+.share-social-btn.twitter:hover {
+  background: #1DA1F2;
+  border-color: #1DA1F2;
+  color: white;
+}
+
+.share-social-btn.facebook:hover {
+  background: #1877F2;
+  border-color: #1877F2;
+  color: white;
+}
+
+.share-social-btn.email:hover {
+  background: #EA4335;
+  border-color: #EA4335;
+  color: white;
+}
+
+.share-info {
+  background: rgba(0, 212, 255, 0.1);
+  border-left: 3px solid #00d4ff;
+  padding: 12px 16px;
+  border-radius: 6px;
+}
+
+.share-info p {
+  margin: 0;
+  color: #e8eef7;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  .share-modal {
+    width: 95%;
+  }
+
+  .share-modal-header {
+    padding: 16px;
+  }
+
+  .share-modal-header h2 {
+    font-size: 16px;
+  }
+
+  .share-modal-content {
+    padding: 16px;
+  }
+
+  .share-link-container {
+    flex-direction: column;
+  }
+
+  .share-copy-btn {
+    width: 100%;
+  }
+
+  .share-methods {
+    padding: 12px;
+  }
+
+  .share-buttons {
+    gap: 6px;
+  }
+
+  .share-social-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+}
