@@ -27,6 +27,7 @@
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
   overflow: hidden;
   position: relative;
+  flex-direction: row;
 }
 
 .editor-area {
@@ -36,17 +37,43 @@
   overflow: hidden;
   min-width: 0;
   background: var(--apple-surface);
-  width: 100%;
   position: relative;
   z-index: 1;
 }
 
 .version-history-panel {
+  position: relative;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(249, 249, 249, 0.95);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  overflow-y: auto;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.04);
+  z-index: 10;
+  flex-shrink: 0;
+  animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.comments-panel-wrapper {
   position: absolute;
   right: 0;
   top: 0;
   bottom: 0;
-  width: 320px;
+  width: 360px;
   display: flex;
   flex-direction: column;
   border-left: 1px solid rgba(0, 0, 0, 0.08);
@@ -163,5 +190,31 @@
 
   .no-doc {
     font-size: 16px;
+  }
+}
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .version-history-panel {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .comments-panel-wrapper {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .app {
+    flex-direction: column;
+  }
+}
+
+/* Touch targets for mobile */
+@media (max-width: 640px) {
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
   }
 }

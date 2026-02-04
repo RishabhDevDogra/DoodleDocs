@@ -121,6 +121,11 @@
   box-shadow: 0 2px 8px rgba(52, 199, 89, 0.3);
 }
 
+.share-copy-btn.error {
+  background: #ff3b30;
+  box-shadow: 0 2px 8px rgba(255, 59, 48, 0.3);
+}
+
 .share-methods {
   margin-bottom: 20px;
   padding: 16px;
@@ -148,9 +153,9 @@
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  border: 2px solid rgba(0, 212, 255, 0.2);
-  background: rgba(0, 212, 255, 0.08);
-  color: #00d4ff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--apple-text);
   font-size: 18px;
   font-weight: 700;
   text-decoration: none;
@@ -160,7 +165,13 @@
 
 .share-social-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.share-social-btn.twitter {
+  background: rgba(29, 161, 242, 0.1);
+  border-color: rgba(29, 161, 242, 0.3);
+  color: #1DA1F2;
 }
 
 .share-social-btn.twitter:hover {
@@ -169,10 +180,22 @@
   color: white;
 }
 
+.share-social-btn.facebook {
+  background: rgba(24, 119, 242, 0.1);
+  border-color: rgba(24, 119, 242, 0.3);
+  color: #1877F2;
+}
+
 .share-social-btn.facebook:hover {
   background: #1877F2;
   border-color: #1877F2;
   color: white;
+}
+
+.share-social-btn.email {
+  background: rgba(234, 67, 53, 0.1);
+  border-color: rgba(234, 67, 53, 0.3);
+  color: #EA4335;
 }
 
 .share-social-btn.email:hover {
@@ -182,15 +205,15 @@
 }
 
 .share-info {
-  background: rgba(0, 212, 255, 0.1);
-  border-left: 3px solid #00d4ff;
+  background: rgba(0, 122, 255, 0.08);
+  border-left: 3px solid var(--apple-blue);
   padding: 12px 16px;
   border-radius: 6px;
 }
 
 .share-info p {
   margin: 0;
-  color: #e8eef7;
+  color: var(--apple-text);
   font-size: 13px;
   font-weight: 500;
 }

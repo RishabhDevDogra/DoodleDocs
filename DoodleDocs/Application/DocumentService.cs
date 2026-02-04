@@ -189,4 +189,22 @@ public class DocumentService
 
         return true;
     }
+
+    /// <summary>
+    /// Get raw document event history (for comments).
+    /// </summary>
+    public async Task<List<DomainEvent>> GetDocumentHistory(string id)
+    {
+        return await _eventStore.GetEventsAsync(id);
+    }
+
+    /// <summary>
+    /// Append a custom event to the event stream.
+    /// </summary>
+    public async Task AppendEvent(string documentId, DomainEvent @event)
+    {
+        @event.DocumentId = documentId;
+        var events = new List<DomainEvent> { @event };
+        await _eventStore.SaveEventsAsync(documentId, events);
+    }
 }

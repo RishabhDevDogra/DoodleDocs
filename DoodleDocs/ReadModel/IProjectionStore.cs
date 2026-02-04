@@ -18,6 +18,9 @@ public class InMemoryProjectionStore : IProjectionStore
 
     public Task SaveProjectionAsync(DocumentProjection projection)
     {
+        if (projection == null)
+            throw new ArgumentNullException(nameof(projection));
+
         _projections[projection.Id] = projection;
         return Task.CompletedTask;
     }
@@ -31,7 +34,10 @@ public class InMemoryProjectionStore : IProjectionStore
     public Task<List<DocumentProjection>> GetAllProjectionsAsync()
     {
         return Task.FromResult(
-            _projections.Values.OrderByDescending(p => p.UpdatedAt).ToList()
+            _projections.Values
+                .Where(p => p != null)
+                .OrderByDescending(p => p!.UpdatedAt)
+                .ToList()
         );
     }
 

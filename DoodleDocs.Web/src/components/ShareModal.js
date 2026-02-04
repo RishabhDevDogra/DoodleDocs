@@ -4,13 +4,35 @@ import './ShareModal.css';
 
 function ShareModal({ documentId, documentTitle, onClose, isOpen }) {
   const [copied, setCopied] = useState(false);
+  const [copyError, setCopyError] = useState(false);
 
   const shareUrl = `${window.location.origin}/share/${documentId}`;
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(shareUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopy = async () => {
+    try {
+      // Try modern clipboard API first
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+        setCopied(true);
+        setCopyError(false);
+        setTimeout(() => setCopied(false), 2000);
+      } else {
+        // Fallback for older browsers or restricted environments
+        const textarea = document.createElement('textarea');
+        textarea.value = shareUrl;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        setCopied(true);
+        setCopyError(false);
+        setTimeout(() => setCopied(false), 2000);
+      }
+    } catch (err) {
+      console.error('Failed to copy:', err);
+      setCopyError(true);
+      setTimeout(() => setCopyError(false), 3000);
+    }
   };
 
   if (!isOpen) return null;
@@ -37,10 +59,10 @@ function ShareModal({ documentId, documentTitle, onClose, isOpen }) {
               onClick={(e) => e.target.select()}
             />
             <button
-              className={`share-copy-btn ${copied ? 'copied' : ''}`}
+              className={`share-copy-btn ${copied ? 'copied' : ''} ${copyError ? 'error' : ''}`}
               onClick={handleCopy}
             >
-              {copied ? '✓ Copied!' : 'Copy Link'}
+              {copied ? '✓ Copied!' : copyError ? '✗ Failed' : 'Copy Link'}
             </button>
           </div>
 

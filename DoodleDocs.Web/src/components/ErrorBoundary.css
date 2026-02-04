@@ -1,0 +1,182 @@
+.error-boundary-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(180deg, #f5f5f7 0%, #e8e8ed 100%);
+  padding: 20px;
+}
+
+.error-boundary-content {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  max-width: 500px;
+  padding: 40px;
+  text-align: center;
+  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.error-title {
+  margin: 0 0 12px 0;
+  color: #1d1d1f;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.error-message {
+  margin: 0 0 24px 0;
+  color: #6e6e73;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.error-details {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 24px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.error-details summary {
+  color: #007aff;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 4px;
+  user-select: none;
+}
+
+.error-details summary:hover {
+  color: #0051d5;
+}
+
+.error-stack {
+  margin: 12px 0 0 0;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  font-size: 11px;
+  color: #1d1d1f;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.error-actions {
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+  margin-bottom: 24px;
+}
+
+.error-btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+}
+
+.error-retry {
+  background: #007aff;
+  color: white;
+}
+
+.error-retry:hover {
+  background: #0051d5;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+}
+
+.error-reload {
+  background: rgba(0, 0, 0, 0.06);
+  color: #1d1d1f;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.error-reload:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.error-home {
+  background: rgba(0, 0, 0, 0.06);
+  color: #1d1d1f;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.error-home:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.error-support {
+  background: rgba(34, 197, 89, 0.08);
+  border: 1px solid rgba(34, 197, 89, 0.2);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: left;
+}
+
+.error-support p {
+  margin: 0 0 12px 0;
+  color: #1d1d1f;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.error-support ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #6e6e73;
+  font-size: 13px;
+}
+
+.error-support li {
+  margin-bottom: 6px;
+}
+
+.error-support li:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .error-boundary-content {
+    padding: 24px;
+  }
+
+  .error-title {
+    font-size: 20px;
+  }
+
+  .error-message {
+    font-size: 14px;
+  }
+
+  .error-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+}

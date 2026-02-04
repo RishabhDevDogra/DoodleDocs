@@ -34,6 +34,9 @@ public class InMemoryEventStore : IEventStore
 
     public Task SaveEventsAsync(string documentId, List<Domain.DomainEvent> events)
     {
+        if (events == null || events.Count == 0)
+            return Task.CompletedTask;
+
         if (!_events.ContainsKey(documentId))
         {
             _events[documentId] = new List<Domain.DomainEvent>();

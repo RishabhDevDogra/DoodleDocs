@@ -7,9 +7,13 @@ import DocumentEditor from './components/DocumentEditor';
 import VersionHistory from './components/VersionHistory';
 import TopNavbar from './components/TopNavbar';
 import ShareModal from './components/ShareModal';
+import Comments from './components/Comments';
+import ErrorBoundary from './components/ErrorBoundary';
+import { useToast } from './components/Toast';
 import { getOrCreateUserId } from './utils/userSession';
 
 function App() {
+  const { addToast } = useToast();
   const [documents, setDocuments] = useState([]);
   const [selectedDocId, setSelectedDocId] = useState(null);
   const [selectedDoc, setSelectedDoc] = useState(null);
@@ -17,6 +21,7 @@ function App() {
   const [userName, setUserName] = useState('');
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [showComments, setShowComments] = useState(false);
 
   // Initialize user session on mount
   useEffect(() => {
@@ -192,44 +197,53 @@ function App() {
   };
 
   return (
-    <div className="app-wrapper">
-      <TopNavbar 
-        userName={userName} 
-        documentTitle={selectedDoc?.title || 'Untitled Masterpiece'}
-        onTitleChange={handleTitleChange}
-        onShare={() => setIsShareModalOpen(true)}
-        onNewDoodle={createNewDocument}
-      />
-      <div className="app">
-        <div className="editor-area">
-          {selectedDoc ? (
-            <DocumentEditor
-              document={selectedDoc}
-              onUpdate={updateDocument}
-              onToggleHistory={() => setShowVersionHistory(!showVersionHistory)}
-              showHistory={showVersionHistory}
-            />
-          ) : (
-            <div className="no-doc">
-              <p>Loading your masterpiece...</p>
+    <ErrorBoundary>
+      <div className="app-wrapper">
+        <TopNavbar 
+          userName={userName} 
+          documentTitle={selectedDoc?.title || 'Untitled Masterpiece'}
+          onTitleChange={handleTitleChange}
+          onShare={() => setIsShareModalOpen(true)}
+          onNewDoodle={createNewDocument}
+        />
+        <div className="app">
+          <div className="editor-area">
+            {selectedDoc ? (
+              <DocumentEditor
+                document={selectedDoc}
+                onUpdate={updateDocument}
+                onToggleHistory={() => setShowVersionHistory(!showVersionHistory)}
+                showHistory={showVersionHistory}
+                onToggleComments={() => setShowComments(!showComments)}
+                showComments={showComments}
+              />
+            ) : (
+              <div className="no-doc">
+                <p>Loading your masterpiece...</p>
+              </div>
+            )}
+          </div>
+          {selectedDoc && showVersionHistory && (
+            <div className="version-history-panel">
+              <VersionHistory documentId={selectedDoc.id} userName={userName} onClose={() => setShowVersionHistory(false)} />
+            </div>
+          )}
+          {selectedDoc && showComments && (
+            <div className="comments-panel-wrapper">
+              <Comments documentId={selectedDoc.id} userName={userName} isOpen={showComments} onClose={() => setShowComments(false)} />
             </div>
           )}
         </div>
-        {selectedDoc && showVersionHistory && (
-          <div className="version-history-panel">
-            <VersionHistory documentId={selectedDoc.id} userName={userName} onClose={() => setShowVersionHistory(false)} />
-          </div>
+        {selectedDoc && (
+          <ShareModal 
+            documentId={selectedDoc.id}
+            documentTitle={selectedDoc.title}
+            isOpen={isShareModalOpen}
+            onClose={() => setIsShareModalOpen(false)}
+          />
         )}
       </div>
-      {selectedDoc && (
-        <ShareModal 
-          documentId={selectedDoc.id}
-          documentTitle={selectedDoc.title}
-          isOpen={isShareModalOpen}
-          onClose={() => setIsShareModalOpen(false)}
-        />
-      )}
-    </div>
+    </ErrorBoundary>
   );
 }
 

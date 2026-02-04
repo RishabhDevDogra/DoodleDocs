@@ -4,7 +4,7 @@ import { API_URL, TITLE_SAVE_DELAY_MS, CANVAS_SAVE_DELAY_MS } from '../config';
 import './DocumentEditor.css';
 import ShareModal from './ShareModal';
 
-function DocumentEditor({ document: doc, onUpdate, onToggleHistory, showHistory }) {
+function DocumentEditor({ document: doc, onUpdate, onToggleHistory, showHistory, onToggleComments, showComments }) {
   const [title, setTitle] = useState(doc.title);
   const [content, setContent] = useState(doc.content);
   const [isSaving, setIsSaving] = useState(false);
@@ -57,11 +57,17 @@ function DocumentEditor({ document: doc, onUpdate, onToggleHistory, showHistory 
 
       // Load existing drawing from content if it exists
       if (content && content.includes('data:image')) {
-        const match = content.match(/src="(data:image[^"]*)/);
+        const match = content.match(/src="(data:image[^"]*)"/);
         if (match && match[1]) {
           const img = new Image();
           img.onload = () => {
+            // Clear canvas first then draw the image
+            context.clearRect(0, 0, canvas.width, canvas.height);
             context.drawImage(img, 0, 0);
+            console.log('Canvas updated with new drawing');
+          };
+          img.onerror = () => {
+            console.error('Failed to load image');
           };
           img.src = match[1];
         }
@@ -268,6 +274,30 @@ function DocumentEditor({ document: doc, onUpdate, onToggleHistory, showHistory 
     }
   };
 
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Cmd+Z for undo
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        handleUndo();
+      }
+      // Cmd+Shift+Z or Cmd+Y for redo
+      if ((e.metaKey || e.ctrlKey) && ((e.key === 'z' && e.shiftKey) || e.key === 'y')) {
+        e.preventDefault();
+        handleRedo();
+      }
+      // Cmd+S for save
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault();
+        handleSave();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleSave, handleUndo, handleRedo]);
+
   return (
     <div className="editor-container">
       <div className="editor-toolbar">
@@ -357,7 +387,7 @@ function DocumentEditor({ document: doc, onUpdate, onToggleHistory, showHistory 
           title="Eraser"
           onClick={() => setBrushColor('#FFFFFF')}
         >
-          🧻
+          🧽
         </button>
         <button 
           className="toolbar-btn clear-btn"
@@ -381,6 +411,13 @@ function DocumentEditor({ document: doc, onUpdate, onToggleHistory, showHistory 
         >
           🕐 History
         </button>
+        <button 
+          className={`toolbar-btn ${showComments ? 'active' : ''}`}
+          title="Comments"
+          onClick={onToggleComments}
+        >
+          💬 Comments
+        </button>
       </div>
       <canvas
         ref={canvasRef}
@@ -402,7 +439,9 @@ DocumentEditor.propTypes = {
   }).isRequired,
   onUpdate: PropTypes.func.isRequired,
   onToggleHistory: PropTypes.func.isRequired,
-  showHistory: PropTypes.bool.isRequired
+  showHistory: PropTypes.bool.isRequired,
+  onToggleComments: PropTypes.func.isRequired,
+  showComments: PropTypes.bool.isRequired
 };
 
 export default DocumentEditor;
