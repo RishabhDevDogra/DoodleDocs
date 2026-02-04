@@ -6,6 +6,7 @@ import DocumentList from './components/DocumentList';
 import DocumentEditor from './components/DocumentEditor';
 import VersionHistory from './components/VersionHistory';
 import TopNavbar from './components/TopNavbar';
+import ShareModal from './components/ShareModal';
 import { getOrCreateUserId } from './utils/userSession';
 
 function App() {
@@ -14,6 +15,8 @@ function App() {
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [userName, setUserName] = useState('');
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
 
   // Initialize user session on mount
   useEffect(() => {
@@ -76,6 +79,16 @@ function App() {
     fetchDocuments();
   }, []);
 
+  // Auto-create first document if none exist and select it
+  useEffect(() => {
+    if (documents.length === 0 && !selectedDocId) {
+      createNewDocument();
+    } else if (documents.length > 0 && !selectedDocId) {
+      // If we have documents but none selected, select the first one
+      setSelectedDocId(documents[0].id);
+    }
+  }, [documents, selectedDocId]);
+
   // Fetch document details when selected
   useEffect(() => {
     if (selectedDocId) {
@@ -108,7 +121,7 @@ function App() {
       const res = await fetch(`${API_URL}/api/document`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: 'New Document' })
+        body: JSON.stringify({ title: 'Untitled Doodle' })
       });
       const newDoc = await res.json();
       setDocuments([newDoc, ...documents]);
@@ -130,6 +143,17 @@ function App() {
       setDocuments(documents.map(d => d.id === id ? updated : d));
     } catch (err) {
       console.error('Error updating document:', err);
+    }
+  };
+
+  const handleTitleChange = (newTitle) => {
+    if (selectedDoc) {
+      setSelectedDoc({ ...selectedDoc, title: newTitle });
+      // Debounce the actual save
+      const timer = setTimeout(() => {
+        updateDocument(selectedDoc.id, newTitle, selectedDoc.content);
+      }, 500);
+      return () => clearTimeout(timer);
     }
   };
 
@@ -171,43 +195,40 @@ function App() {
     <div className="app-wrapper">
       <TopNavbar 
         userName={userName} 
-        onNewDocument={createNewDocument}
-        documentCount={documents.length}
+        documentTitle={selectedDoc?.title || 'Untitled Masterpiece'}
+        onTitleChange={handleTitleChange}
+        onShare={() => setIsShareModalOpen(true)}
+        onNewDoodle={createNewDocument}
       />
       <div className="app">
-        <div className="sidebar">
-          <button className="new-doc-btn" onClick={createNewDocument}>+ New Doodle</button>
-          <input
-            type="text"
-            className="search-box"
-            placeholder="Search doodles..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <DocumentList
-            documents={documents.filter(d => d.title.toLowerCase().includes(searchTerm.toLowerCase()))}
-            selectedDocId={selectedDocId}
-            onSelectDoc={setSelectedDocId}
-            onDeleteDoc={deleteDocument}
-            onDuplicateDoc={duplicateDocument}
-          />
-        </div>
         <div className="editor-area">
           {selectedDoc ? (
             <DocumentEditor
               document={selectedDoc}
               onUpdate={updateDocument}
+              onToggleHistory={() => setShowVersionHistory(!showVersionHistory)}
+              showHistory={showVersionHistory}
             />
           ) : (
             <div className="no-doc">
-              <p>Select or create a doodle to start drawing</p>
+              <p>Loading your masterpiece...</p>
             </div>
           )}
         </div>
-        <div className="version-history-panel">
-          {selectedDoc && <VersionHistory documentId={selectedDoc.id} userName={userName} />}
-        </div>
+        {selectedDoc && showVersionHistory && (
+          <div className="version-history-panel">
+            <VersionHistory documentId={selectedDoc.id} userName={userName} onClose={() => setShowVersionHistory(false)} />
+          </div>
+        )}
       </div>
+      {selectedDoc && (
+        <ShareModal 
+          documentId={selectedDoc.id}
+          documentTitle={selectedDoc.title}
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

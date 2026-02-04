@@ -1,42 +1,39 @@
 .document-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .empty-state {
-  color: #00d4ff;
+  color: var(--apple-text-secondary);
   font-size: 13px;
   text-align: center;
-  padding: 20px 0;
-  text-transform: uppercase;
-  font-weight: bold;
+  padding: 40px 20px;
+  font-weight: 500;
 }
 
 .doc-item {
-  padding: 14px;
-  margin-bottom: 4px;
-  border-radius: 15px;
+  padding: 10px 12px;
+  margin-bottom: 2px;
+  border-radius: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: all 0.3s;
-  background: rgba(255, 0, 110, 0.1);
-  border: 2px solid transparent;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  background: transparent;
+  border: 1px solid transparent;
 }
 
 .doc-item:hover {
-  background: rgba(255, 0, 110, 0.2);
-  border-color: #ff006e;
-  box-shadow: 0 4px 15px rgba(255, 0, 110, 0.2);
-  transform: translateX(5px);
+  background: rgba(0, 122, 255, 0.06);
+  border-color: rgba(0, 122, 255, 0.15);
 }
 
 .doc-item.active {
-  background: linear-gradient(135deg, rgba(255, 0, 110, 0.3), rgba(0, 212, 255, 0.1));
-  border: 2px solid #00d4ff;
-  box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+  background: rgba(0, 122, 255, 0.1);
+  border: 1px solid rgba(0, 122, 255, 0.25);
+  box-shadow: 0 1px 4px rgba(0, 122, 255, 0.12);
 }
 
 .doc-info {
@@ -46,55 +43,61 @@
 }
 
 .doc-item h3 {
-  margin: 0 0 6px 0;
+  margin: 0 0 4px 0;
   font-size: 14px;
-  color: #ffffff;
+  color: var(--apple-text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .doc-item p {
   margin: 0;
   font-size: 11px;
-  color: #00d4ff;
-  text-transform: uppercase;
+  color: var(--apple-text-secondary);
+  font-weight: 500;
 }
 
 .doc-actions {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   margin-left: 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.doc-item:hover .doc-actions {
+  opacity: 1;
 }
 
 .action-btn {
-  background: none;
+  background: rgba(0, 0, 0, 0.05);
   border: none;
   cursor: pointer;
-  font-size: 16px;
-  padding: 4px 6px;
-  transition: all 0.3s;
-  border-radius: 8px;
+  font-size: 14px;
+  padding: 6px 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .duplicate-btn {
-  color: #00d4ff;
+  color: var(--apple-blue);
 }
 
 .duplicate-btn:hover {
-  background: rgba(0, 212, 255, 0.2);
-  transform: scale(1.15);
+  background: rgba(0, 122, 255, 0.15);
+  transform: scale(1.1);
 }
 
 .delete-btn {
-  color: #ff006e;
+  color: var(--apple-pink);
 }
 
 .delete-btn:hover {
-  background: rgba(255, 0, 110, 0.2);
-  transform: scale(1.15);
+  background: rgba(255, 45, 85, 0.15);
+  transform: scale(1.1);
 }

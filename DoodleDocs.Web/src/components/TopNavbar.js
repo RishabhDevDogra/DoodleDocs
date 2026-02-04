@@ -2,28 +2,42 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './TopNavbar.css';
 
-function TopNavbar({ userName, onNewDocument, documentCount }) {
+function TopNavbar({ userName, documentTitle, onTitleChange, onShare, onNewDoodle }) {
   return (
     <nav className="top-navbar">
-      <div className="navbar-brand">
-        <span className="navbar-logo">🎨</span>
-        <h1 className="navbar-title">DoodleDocs</h1>
+      <div className="navbar-left">
+        <div className="navbar-brand">
+          <span className="navbar-logo">🎨</span>
+          <span className="navbar-title">DoodleDocs</span>
+        </div>
+        
+        <input
+          type="text"
+          className="navbar-doc-title"
+          value={documentTitle}
+          onChange={(e) => onTitleChange(e.target.value)}
+          placeholder="Untitled Docs"
+        />
       </div>
 
-      <div className="navbar-center">
+      <div className="navbar-right">
         <span className="user-greeting">Hey, <span className="user-name">{userName}</span>!</span>
-      </div>
-
-      <div className="navbar-actions">
         <button 
-          className="navbar-create-btn"
-          onClick={onNewDocument}
-          title="Create a new doodle"
+          className="navbar-new-btn"
+          onClick={onNewDoodle}
+          title="Create new doodle"
         >
-          <span className="btn-icon">+</span>
-          <span className="btn-text">New Doodle</span>
+          <span>✨</span>
+          <span>New Doodle</span>
         </button>
-        <span className="doc-count">{documentCount} doodles</span>
+        <button 
+          className="navbar-share-btn"
+          onClick={onShare}
+          title="Share this doodle"
+        >
+          <span>🔗</span>
+          <span>Share</span>
+        </button>
       </div>
     </nav>
   );
@@ -31,8 +45,10 @@ function TopNavbar({ userName, onNewDocument, documentCount }) {
 
 TopNavbar.propTypes = {
   userName: PropTypes.string.isRequired,
-  onNewDocument: PropTypes.func.isRequired,
-  documentCount: PropTypes.number.isRequired
+  documentTitle: PropTypes.string.isRequired,
+  onTitleChange: PropTypes.func.isRequired,
+  onShare: PropTypes.func.isRequired,
+  onNewDoodle: PropTypes.func.isRequired
 };
 
 export default TopNavbar;

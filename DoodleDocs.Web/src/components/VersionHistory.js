@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { API_URL } from '../config';
 import './VersionHistory.css';
 
-function VersionHistory({ documentId, onRevert, userName }) {
+function VersionHistory({ documentId, onRevert, userName, onClose }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -51,14 +51,25 @@ function VersionHistory({ documentId, onRevert, userName }) {
     <div className="version-history">
       <div className="history-header">
         <h3>Version History</h3>
-        <button 
-          className="history-refresh-btn"
-          onClick={fetchEventHistory}
-          disabled={loading}
-          title="Refresh history"
-        >
-          🔄
-        </button>
+        <div className="history-actions">
+          <button 
+            className="history-refresh-btn"
+            onClick={fetchEventHistory}
+            disabled={loading}
+            title="Refresh history"
+          >
+            🔄
+          </button>
+          {onClose && (
+            <button 
+              className="history-close-btn"
+              onClick={onClose}
+              title="Close"
+            >
+              ✕
+            </button>
+          )}
+        </div>
       </div>
       
       {loading && <div className="history-loading">Loading events...</div>}
@@ -91,7 +102,8 @@ function VersionHistory({ documentId, onRevert, userName }) {
 VersionHistory.propTypes = {
   documentId: PropTypes.string,
   onRevert: PropTypes.func,
-  userName: PropTypes.string
+  userName: PropTypes.string,
+  onClose: PropTypes.func
 };
 
 export default VersionHistory;

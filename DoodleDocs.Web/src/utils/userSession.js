@@ -1,25 +1,26 @@
-// Generate funny random names like Reddit does
+// Generate Reddit-style names with adjective-occupation format
 const adjectives = [
-  'Silly', 'Happy', 'Clever', 'Lazy', 'Speedy', 'Sleepy', 'Gentle', 'Brave',
-  'Witty', 'Curious', 'Eager', 'Swift', 'Wild', 'Cool', 'Bright', 'Crafty',
-  'Playful', 'Sharp', 'Calm', 'Snappy', 'Vivid', 'Noble', 'Kind', 'Bouncy',
-  'Zippy', 'Quirky', 'Humble', 'Sly', 'Mighty', 'Jolly', 'Perky', 'Smooth',
-  'Droll', 'Wacky', 'Smart', 'Tiny', 'Vast', 'Fuzzy', 'Sleek', 'Proud'
+  'Creative', 'Artistic', 'Bold', 'Brilliant', 'Calm', 'Cheerful', 'Clever', 'Curious',
+  'Daring', 'Dynamic', 'Eager', 'Elegant', 'Energetic', 'Fearless', 'Friendly', 'Gentle',
+  'Happy', 'Honest', 'Humble', 'Incredible', 'Joyful', 'Kind', 'Lively', 'Loyal',
+  'Magical', 'Mighty', 'Noble', 'Optimistic', 'Passionate', 'Peaceful', 'Playful', 'Proud',
+  'Quick', 'Radiant', 'Reliable', 'Serene', 'Sharp', 'Smart', 'Smooth', 'Spirited',
+  'Stellar', 'Strong', 'Swift', 'Talented', 'Thoughtful', 'Vibrant', 'Wise', 'Witty'
 ];
 
-const nouns = [
-  'Panda', 'Narwhal', 'Penguin', 'Platypus', 'Capybara', 'Otter', 'Lemur', 'Quokka',
-  'Sloth', 'Hedgehog', 'Koala', 'Chinchilla', 'Meerkat', 'Mongoose', 'Wombat', 'Badger',
-  'Emu', 'Flamingo', 'Peacock', 'Llama', 'Alpaca', 'Axolotl', 'Fennec', 'Caracal',
-  'Ocelot', 'Puma', 'Jaguar', 'Lynx', 'Bobcat', 'Cougar', 'Cheetah', 'Serval',
-  'Dolphin', 'Whale', 'Seal', 'Walrus', 'Manatee', 'Orca', 'Shark', 'Stingray',
-  'Turtle', 'Tortoise', 'Iguana', 'Dragon', 'Phoenix', 'Griffin', 'Unicorn', 'Sphinx'
+const occupations = [
+  'Artist', 'Architect', 'Chef', 'Designer', 'Doctor', 'Engineer', 'Explorer', 'Gardener',
+  'Guide', 'Inventor', 'Judge', 'Keeper', 'Leader', 'Maker', 'Navigator', 'Observer',
+  'Painter', 'Pilot', 'Poet', 'Ranger', 'Scholar', 'Scientist', 'Scout', 'Sculptor',
+  'Singer', 'Solver', 'Teacher', 'Thinker', 'Trainer', 'Traveler', 'Visionary', 'Warrior',
+  'Writer', 'Composer', 'Dancer', 'Dreamer', 'Builder', 'Creator', 'Craftsman', 'Healer',
+  'Hunter', 'Musician', 'Philosopher', 'Strategist', 'Storyteller', 'Adventurer', 'Champion', 'Guardian'
 ];
 
 export function generateFunnyName() {
   const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-  const noun = nouns[Math.floor(Math.random() * nouns.length)];
-  return `${adjective}-${noun}`;
+  const occupation = occupations[Math.floor(Math.random() * occupations.length)];
+  return `${adjective}-${occupation}`;
 }
 
 export function getOrCreateUserId() {

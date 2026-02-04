@@ -2,126 +2,198 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 32px;
-  background: linear-gradient(90deg, #0f3460 0%, #16213e 50%, #1a1a2e 100%);
-  border-bottom: 2px solid;
-  border-image: linear-gradient(90deg, #ff006e 0%, #00d4ff 100%) 1;
-  box-shadow: 
-    0 4px 20px rgba(0, 0, 0, 0.5),
-    0 0 30px rgba(0, 212, 255, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  height: 70px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset,
+              0 1px 2px rgba(0, 0, 0, 0.03);
+  min-height: 56px;
   position: relative;
   z-index: 200;
+  gap: 16px;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 0;
 }
 
 .navbar-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
-  min-width: 200px;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .navbar-logo {
-  font-size: 32px;
-  animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-4px); }
+  font-size: 22px;
 }
 
 .navbar-title {
-  font-size: 28px;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 600;
   margin: 0;
-  background: linear-gradient(135deg, #ff006e, #00d4ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -1px;
-  text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-  filter: drop-shadow(0 0 10px rgba(255, 0, 110, 0.2));
+  color: var(--apple-text);
+  letter-spacing: -0.3px;
 }
 
-.navbar-center {
+.navbar-doc-title {
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  color: var(--apple-text);
+  background: transparent;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.15s;
   flex: 1;
-  text-align: center;
+  max-width: 500px;
+}
+
+.navbar-doc-title:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.navbar-doc-title:focus {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.navbar-doc-title::placeholder {
+  color: rgba(60, 60, 67, 0.4);
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 .user-greeting {
-  font-size: 14px;
-  font-weight: 600;
-  color: #e8eef7;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.user-name {
-  color: #00d4ff;
-  font-weight: 800;
-  text-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
-  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.4));
-}
-
-.navbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  min-width: 240px;
-  justify-content: flex-end;
-}
-
-.navbar-create-btn {
-  padding: 10px 20px;
-  background: linear-gradient(135deg, #ff006e, #ff5c8a);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 700;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 15px rgba(255, 0, 110, 0.4);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--apple-text-secondary);
   white-space: nowrap;
 }
 
-.navbar-create-btn:hover {
-  background: linear-gradient(135deg, #ff5c8a, #ff006e);
-  box-shadow: 0 6px 20px rgba(255, 0, 110, 0.6);
-  transform: translateY(-2px);
+.user-name {
+  color: var(--apple-blue);
+  font-weight: 600;
 }
 
-.navbar-create-btn:active {
-  transform: translateY(0);
-}
-
-.btn-icon {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.btn-text {
+.navbar-new-btn {
+  padding: 7px 14px;
+  background: var(--apple-purple);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
   font-size: 13px;
+  font-weight: 600;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 1px 3px rgba(175, 82, 222, 0.3);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  white-space: nowrap;
 }
 
-.doc-count {
-  font-size: 12px;
-  color: #00d4ff;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  text-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
-  padding: 6px 12px;
-  background: rgba(0, 212, 255, 0.05);
-  border: 1px solid rgba(0, 212, 255, 0.2);
-  border-radius: 6px;
+.navbar-new-btn:hover {
+  background: #9642d4;
+  box-shadow: 0 2px 6px rgba(175, 82, 222, 0.4);
+  transform: translateY(-1px);
+}
+
+.navbar-new-btn:active {
+  transform: scale(0.96);
+}
+
+.navbar-share-btn {
+  padding: 7px 14px;
+  background: var(--apple-blue);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 1px 3px rgba(0, 122, 255, 0.3);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  white-space: nowrap;
+}
+
+.navbar-share-btn:hover {
+  background: #0051d5;
+  box-shadow: 0 2px 6px rgba(0, 122, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.navbar-share-btn:active {
+  transform: scale(0.96);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .top-navbar {
+    padding: 10px 12px;
+    min-height: auto;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .navbar-left {
+    flex: 1;
+    min-width: 100%;
+    order: 1;
+  }
+
+  .navbar-brand {
+    gap: 6px;
+  }
+
+  .navbar-logo {
+    font-size: 20px;
+  }
+
+  .navbar-title {
+    font-size: 14px;
+  }
+
+  .navbar-doc-title {
+    font-size: 14px;
+    padding: 6px 10px;
+    max-width: none;
+  }
+
+  .navbar-right {
+    width: 100%;
+    justify-content: space-between;
+    order: 2;
+    gap: 8px;
+  }
+
+  .user-greeting {
+    font-size: 12px;
+    flex: 1;
+  }
+
+  .navbar-new-btn,
+  .navbar-share-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
 }
 
 /* Responsive Design */

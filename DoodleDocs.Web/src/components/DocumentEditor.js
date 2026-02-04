@@ -4,7 +4,7 @@ import { API_URL, TITLE_SAVE_DELAY_MS, CANVAS_SAVE_DELAY_MS } from '../config';
 import './DocumentEditor.css';
 import ShareModal from './ShareModal';
 
-function DocumentEditor({ document: doc, onUpdate }) {
+function DocumentEditor({ document: doc, onUpdate, onToggleHistory, showHistory }) {
   const [title, setTitle] = useState(doc.title);
   const [content, setContent] = useState(doc.content);
   const [isSaving, setIsSaving] = useState(false);
@@ -13,8 +13,11 @@ function DocumentEditor({ document: doc, onUpdate }) {
   const [isDrawing, setIsDrawing] = useState(false);
   const [brushColor, setBrushColor] = useState('#000000');
   const [brushSize, setBrushSize] = useState(2);
+  const [drawMode, setDrawMode] = useState('brush'); // 'brush', 'rectangle', 'circle', 'line'
   const [currentVersion, setCurrentVersion] = useState(0);
   const [maxVersion, setMaxVersion] = useState(0);
+  const [startPos, setStartPos] = useState(null);
+  const [snapshot, setSnapshot] = useState(null);
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
 
@@ -104,20 +107,58 @@ function DocumentEditor({ document: doc, onUpdate }) {
 
   const startDrawing = ({ nativeEvent }) => {
     const { offsetX, offsetY } = nativeEvent;
-    contextRef.current.beginPath();
-    contextRef.current.moveTo(offsetX, offsetY);
     setIsDrawing(true);
+    setStartPos({ x: offsetX, y: offsetY });
+    
+    if (drawMode === 'brush') {
+      contextRef.current.beginPath();
+      contextRef.current.moveTo(offsetX, offsetY);
+    } else {
+      // Save canvas state for shape drawing
+      setSnapshot(canvasRef.current.toDataURL());
+    }
   };
 
   const draw = ({ nativeEvent }) => {
     if (!isDrawing) return;
     const { offsetX, offsetY } = nativeEvent;
-    contextRef.current.lineTo(offsetX, offsetY);
-    contextRef.current.stroke();
+    
+    if (drawMode === 'brush') {
+      contextRef.current.lineTo(offsetX, offsetY);
+      contextRef.current.stroke();
+    } else {
+      // Restore snapshot and draw shape
+      if (snapshot) {
+        const img = new Image();
+        img.src = snapshot;
+        img.onload = () => {
+          contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+          contextRef.current.drawImage(img, 0, 0);
+          drawShape(startPos.x, startPos.y, offsetX, offsetY);
+        };
+      }
+    }
+  };
+
+  const drawShape = (x1, y1, x2, y2) => {
+    const ctx = contextRef.current;
+    ctx.beginPath();
+    
+    if (drawMode === 'rectangle') {
+      ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+    } else if (drawMode === 'circle') {
+      const radius = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+      ctx.arc(x1, y1, radius, 0, 2 * Math.PI);
+      ctx.stroke();
+    } else if (drawMode === 'line') {
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
   };
 
   const stopDrawing = () => {
-    if (contextRef.current) {
+    if (contextRef.current && drawMode === 'brush') {
       contextRef.current.closePath();
     }
     if (isDrawing) {
@@ -125,6 +166,7 @@ function DocumentEditor({ document: doc, onUpdate }) {
       setTimeout(() => handleSave(), CANVAS_SAVE_DELAY_MS);
     }
     setIsDrawing(false);
+    setSnapshot(null);
   };
 
   const clearCanvas = () => {
@@ -228,31 +270,6 @@ function DocumentEditor({ document: doc, onUpdate }) {
 
   return (
     <div className="editor-container">
-      <div className="editor-header">
-        <div className="title-section">
-          <label className="title-label">📄 TITLE:</label>
-          <input
-            type="text"
-            className="doc-title-input"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Click here to name your document..."
-          />
-        </div>
-        <div className="save-status">
-          {isSaving && <span className="saving">Saving...</span>}
-          {!isSaving && lastSaved && (
-            <span className="saved">✓ Saved</span>
-          )}
-        </div>
-        <button 
-          className="share-btn"
-          onClick={() => setIsShareModalOpen(true)}
-          title="Share this doodle with friends"
-        >
-          🔗 Share
-        </button>
-      </div>
       <div className="editor-toolbar">
         <button 
           className="toolbar-btn"
@@ -272,7 +289,43 @@ function DocumentEditor({ document: doc, onUpdate }) {
         </button>
         <div className="toolbar-divider"></div>
         <div className="toolbar-group">
-          <label className="toolbar-label">Color:</label>
+          <label className="toolbar-label">Draw</label>
+          <button
+            className={`toolbar-btn ${drawMode === 'brush' ? 'active' : ''}`}
+            onClick={() => setDrawMode('brush')}
+            title="Brush"
+          >
+            ✏️
+          </button>
+          <button
+            className={`toolbar-btn ${drawMode === 'line' ? 'active' : ''}`}
+            onClick={() => setDrawMode('line')}
+            title="Line"
+          >
+            ─
+          </button>
+        </div>
+        <div className="toolbar-divider"></div>
+        <div className="toolbar-group">
+          <label className="toolbar-label">Shapes</label>
+          <button
+            className={`toolbar-btn ${drawMode === 'rectangle' ? 'active' : ''}`}
+            onClick={() => setDrawMode('rectangle')}
+            title="Rectangle"
+          >
+            ▢
+          </button>
+          <button
+            className={`toolbar-btn ${drawMode === 'circle' ? 'active' : ''}`}
+            onClick={() => setDrawMode('circle')}
+            title="Circle"
+          >
+            ○
+          </button>
+        </div>
+        <div className="toolbar-divider"></div>
+        <div className="toolbar-group">
+          <label className="toolbar-label">Color</label>
           <input 
             type="color"
             value={brushColor}
@@ -282,7 +335,7 @@ function DocumentEditor({ document: doc, onUpdate }) {
           />
         </div>
         <div className="toolbar-group">
-          <label className="toolbar-label">Size:</label>
+          <label className="toolbar-label">Size</label>
           <select 
             className="toolbar-select"
             value={brushSize}
@@ -318,7 +371,15 @@ function DocumentEditor({ document: doc, onUpdate }) {
           title="Download Drawing (.png)"
           onClick={exportDrawingImage}
         >
-          Save
+          💾 Save
+        </button>
+        <div className="toolbar-divider"></div>
+        <button 
+          className={`toolbar-btn ${showHistory ? 'active' : ''}`}
+          title="Version History"
+          onClick={onToggleHistory}
+        >
+          🕐 History
         </button>
       </div>
       <canvas
@@ -328,12 +389,6 @@ function DocumentEditor({ document: doc, onUpdate }) {
         onMouseMove={draw}
         onMouseUp={stopDrawing}
         onMouseLeave={stopDrawing}
-      />
-      <ShareModal 
-        documentId={doc.id}
-        documentTitle={title || 'Untitled'}
-        isOpen={isShareModalOpen}
-        onClose={() => setIsShareModalOpen(false)}
       />
     </div>
   );
@@ -345,7 +400,9 @@ DocumentEditor.propTypes = {
     title: PropTypes.string.isRequired,
     content: PropTypes.string
   }).isRequired,
-  onUpdate: PropTypes.func.isRequired
+  onUpdate: PropTypes.func.isRequired,
+  onToggleHistory: PropTypes.func.isRequired,
+  showHistory: PropTypes.bool.isRequired
 };
 
 export default DocumentEditor;
