@@ -206,3 +206,59 @@
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
 }
+
+@media (max-width: 768px) {
+  .version-history {
+    padding: 12px 16px;
+  }
+
+  .history-header {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+  }
+
+  .history-header h3 {
+    font-size: 15px;
+  }
+
+  .history-event {
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .version-history {
+    padding: 10px 12px;
+  }
+
+  .history-header {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    gap: 8px;
+  }
+
+  .history-header h3 {
+    font-size: 13px;
+  }
+
+  .history-refresh-btn,
+  .history-close-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+  }
+
+  .history-event {
+    padding: 8px 10px;
+    gap: 10px;
+  }
+
+  .event-description {
+    font-size: 12px;
+  }
+
+  .event-user,
+  .event-time {
+    font-size: 10px;
+  }
+}

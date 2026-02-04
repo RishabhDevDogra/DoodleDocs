@@ -111,26 +111,55 @@ function DocumentEditor({ document: doc, onUpdate, onToggleHistory, showHistory,
     return () => clearTimeout(timer);
   }, [title, doc.title, handleSave]);
 
-  const startDrawing = ({ nativeEvent }) => {
-    const { offsetX, offsetY } = nativeEvent;
+  const getCanvasPoint = (event) => {
+    if (!canvasRef.current) return null;
+    const rect = canvasRef.current.getBoundingClientRect();
+    let clientX = 0;
+    let clientY = 0;
+
+    if (event.touches && event.touches.length > 0) {
+      clientX = event.touches[0].clientX;
+      clientY = event.touches[0].clientY;
+    } else if (event.changedTouches && event.changedTouches.length > 0) {
+      clientX = event.changedTouches[0].clientX;
+      clientY = event.changedTouches[0].clientY;
+    } else {
+      clientX = event.clientX;
+      clientY = event.clientY;
+    }
+
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top
+    };
+  };
+
+  const startDrawing = (event) => {
+    event.preventDefault?.();
+    const point = getCanvasPoint(event);
+    if (!point) return;
+    const { x, y } = point;
     setIsDrawing(true);
-    setStartPos({ x: offsetX, y: offsetY });
+    setStartPos({ x, y });
     
     if (drawMode === 'brush') {
       contextRef.current.beginPath();
-      contextRef.current.moveTo(offsetX, offsetY);
+      contextRef.current.moveTo(x, y);
     } else {
       // Save canvas state for shape drawing
       setSnapshot(canvasRef.current.toDataURL());
     }
   };
 
-  const draw = ({ nativeEvent }) => {
+  const draw = (event) => {
     if (!isDrawing) return;
-    const { offsetX, offsetY } = nativeEvent;
+    event.preventDefault?.();
+    const point = getCanvasPoint(event);
+    if (!point) return;
+    const { x, y } = point;
     
     if (drawMode === 'brush') {
-      contextRef.current.lineTo(offsetX, offsetY);
+      contextRef.current.lineTo(x, y);
       contextRef.current.stroke();
     } else {
       // Restore snapshot and draw shape
@@ -140,7 +169,7 @@ function DocumentEditor({ document: doc, onUpdate, onToggleHistory, showHistory,
         img.onload = () => {
           contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
           contextRef.current.drawImage(img, 0, 0);
-          drawShape(startPos.x, startPos.y, offsetX, offsetY);
+          drawShape(startPos.x, startPos.y, x, y);
         };
       }
     }
@@ -163,7 +192,8 @@ function DocumentEditor({ document: doc, onUpdate, onToggleHistory, showHistory,
     }
   };
 
-  const stopDrawing = () => {
+  const stopDrawing = (event) => {
+    event?.preventDefault?.();
     if (contextRef.current && drawMode === 'brush') {
       contextRef.current.closePath();
     }
@@ -174,6 +204,27 @@ function DocumentEditor({ document: doc, onUpdate, onToggleHistory, showHistory,
     setIsDrawing(false);
     setSnapshot(null);
   };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const onTouchStart = (event) => startDrawing(event);
+    const onTouchMove = (event) => draw(event);
+    const onTouchEnd = (event) => stopDrawing(event);
+
+    canvas.addEventListener('touchstart', onTouchStart, { passive: false });
+    canvas.addEventListener('touchmove', onTouchMove, { passive: false });
+    canvas.addEventListener('touchend', onTouchEnd, { passive: false });
+    canvas.addEventListener('touchcancel', onTouchEnd, { passive: false });
+
+    return () => {
+      canvas.removeEventListener('touchstart', onTouchStart);
+      canvas.removeEventListener('touchmove', onTouchMove);
+      canvas.removeEventListener('touchend', onTouchEnd);
+      canvas.removeEventListener('touchcancel', onTouchEnd);
+    };
+  }, [startDrawing, draw, stopDrawing]);
 
   const clearCanvas = () => {
     if (canvasRef.current && contextRef.current) {

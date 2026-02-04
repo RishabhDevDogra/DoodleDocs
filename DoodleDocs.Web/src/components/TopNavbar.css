@@ -152,7 +152,17 @@
   transform: scale(0.96);
 }
 
-/* Mobile Responsive */
+@media (max-width: 1024px) {
+  .top-navbar {
+    padding: 12px 20px;
+    min-height: 56px;
+  }
+
+  .navbar-doc-title {
+    max-width: 360px;
+  }
+}
+
 @media (max-width: 768px) {
   .top-navbar {
     padding: 10px 12px;
@@ -162,17 +172,8 @@
   }
 
   .navbar-left {
-    flex: 1;
-    min-width: 100%;
+    width: 100%;
     order: 1;
-  }
-
-  .navbar-brand {
-    gap: 6px;
-  }
-
-  .navbar-logo {
-    font-size: 20px;
   }
 
   .navbar-title {
@@ -189,12 +190,10 @@
     width: 100%;
     justify-content: space-between;
     order: 2;
-    gap: 8px;
   }
 
   .user-greeting {
     font-size: 12px;
-    flex: 1;
   }
 
   .navbar-new-btn,
@@ -204,129 +203,27 @@
   }
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .top-navbar {
-    padding: 12px 20px;
-    height: 60px;
-  }
-
-  .navbar-title {
-    font-size: 22px;
-  }
-
-  .navbar-logo {
-    font-size: 28px;
-  }
-
-  .user-greeting {
-    display: none;
-  }
-
-  .navbar-center {
-    display: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .top-navbar {
-    padding: 10px 12px;
-    height: 56px;
-    gap: 10px;
-  }
-
-  .navbar-brand {
-    min-width: auto;
-    gap: 8px;
-  }
-
-  .navbar-title {
-    font-size: 18px;
-  }
-
-  .navbar-logo {
-    font-size: 24px;
-  }
-
-  .navbar-center {
-    flex: 0.5;
-  }
-
-  .user-greeting {
-    font-size: 12px;
-  }
-
-  .user-name {
-    font-size: 12px;
-  }
-
-  .navbar-actions {
-    gap: 8px;
-    min-width: auto;
-  }
-
-  .navbar-create-btn {
-    padding: 8px 12px;
-    font-size: 11px;
-    border-radius: 6px;
-  }
-
-  .btn-icon {
-    font-size: 14px;
-  }
-
-  .btn-text {
-    display: inline;
-  }
-
-  .doc-count {
-    font-size: 10px;
-    padding: 4px 8px;
-  }
-}
-
 @media (max-width: 480px) {
   .top-navbar {
     padding: 8px 10px;
-    height: 52px;
-    gap: 8px;
-  }
-
-  .navbar-brand {
     gap: 6px;
   }
 
   .navbar-title {
-    font-size: 16px;
+    display: none;
   }
 
   .navbar-logo {
-    font-size: 20px;
+    font-size: 18px;
   }
 
-  .navbar-center {
+  .user-greeting {
     display: none;
   }
 
-  .navbar-actions {
-    gap: 6px;
-  }
-
-  .navbar-create-btn {
-    padding: 6px 10px;
-    font-size: 10px;
-  }
-
-  .btn-icon {
-    font-size: 12px;
-  }
-
-  .btn-text {
-    display: none;
-  }
-
-  .doc-count {
-    font-size: 9px;
-    padding: 3px 6px;
+  .navbar-new-btn,
+  .navbar-share-btn {
+    flex: 1;
+    min-height: 40px;
   }
 }

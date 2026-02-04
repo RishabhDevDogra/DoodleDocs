@@ -237,3 +237,41 @@
     opacity: 0.6;
   }
 }
+
+@media (max-width: 480px) {
+  .comments-header {
+    padding: 12px 16px;
+  }
+
+  .comments-header h3 {
+    font-size: 14px;
+  }
+
+  .comments-close-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 16px;
+  }
+
+  .comment-form {
+    padding: 10px 12px;
+  }
+
+  .comment-input {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+
+  .comment-submit-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .comments-list {
+    padding: 10px 12px;
+  }
+
+  .comment-item {
+    padding: 8px 10px;
+  }
+}
