@@ -5,7 +5,7 @@
   background: rgba(249, 249, 249, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  padding: 16px;
+  padding: 16px 20px;
   overflow-y: auto;
 }
 
@@ -13,17 +13,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  gap: 8px;
+  gap: 12px;
 }
 
 .history-header h3 {
   margin: 0;
   color: var(--apple-text);
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 600;
+  letter-spacing: 0.3px;
 }
 
 .history-actions {
@@ -90,20 +91,20 @@
 .history-empty {
   text-align: center;
   color: var(--apple-text-secondary);
-  font-size: 13px;
-  padding: 24px 0;
-  margin-top: 20px;
-  font-weight: 500;
+  font-size: 14px;
+  padding: 32px 16px;
+  margin-top: 24px;
+  font-weight: 400;
 }
 
 .history-event {
   display: flex;
   gap: 12px;
-  padding: 12px;
+  padding: 14px 16px;
   background: white;
   border-left: 3px solid var(--apple-blue);
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  border-radius: 10px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
@@ -137,9 +138,9 @@
 
 .event-description {
   color: var(--apple-text);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
-  line-height: 1.4;
+  line-height: 1.5;
   word-break: break-word;
 }
 
@@ -195,9 +196,10 @@
 .history-loading {
   text-align: center;
   color: var(--apple-blue);
-  font-size: 12px;
-  padding: 16px;
+  font-size: 13px;
+  padding: 20px;
   animation: pulse 1.5s ease-in-out infinite;
+  font-weight: 500;
 }
 
 @keyframes pulse {

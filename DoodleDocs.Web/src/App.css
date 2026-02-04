@@ -1,14 +1,25 @@
 :root {
   --apple-bg: #f5f5f7;
   --apple-surface: #ffffff;
+  --apple-bg-secondary: #f9f9fb;
   --apple-border: #d2d2d7;
+  --apple-border-light: rgba(0, 0, 0, 0.05);
   --apple-text: #1d1d1f;
   --apple-text-secondary: #6e6e73;
+  --apple-text-tertiary: #a1a1a6;
   --apple-blue: #007aff;
+  --apple-blue-light: #0a84ff;
   --apple-pink: #ff2d55;
   --apple-purple: #af52de;
-  --apple-shadow: rgba(0, 0, 0, 0.1);
+  --apple-red: #ff3b30;
+  --apple-green: #34c759;
+  --apple-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --apple-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --apple-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.18);
   --apple-hover: rgba(0, 0, 0, 0.04);
+  --apple-hover-strong: rgba(0, 0, 0, 0.06);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .app-wrapper {
@@ -46,15 +57,15 @@
   width: 300px;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(249, 249, 249, 0.95);
+  border-left: 1px solid var(--apple-border-light);
+  background: linear-gradient(135deg, rgba(249, 249, 251, 0.98) 0%, rgba(240, 240, 245, 0.95) 100%);
   backdrop-filter: blur(30px) saturate(180%);
   -webkit-backdrop-filter: blur(30px) saturate(180%);
   overflow-y: auto;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.04);
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.08);
   z-index: 10;
   flex-shrink: 0;
-  animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideInRight 0.35s var(--ease-smooth);
 }
 
 @keyframes slideInRight {
@@ -76,13 +87,13 @@
   width: 360px;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.98);
+  border-left: 1px solid var(--apple-border-light);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.99) 0%, rgba(250, 250, 252, 0.97) 100%);
   backdrop-filter: blur(30px) saturate(180%);
   -webkit-backdrop-filter: blur(30px) saturate(180%);
   overflow-y: auto;
-  box-shadow: -2px 0 20px rgba(0, 0, 0, 0.08);
-  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: -4px 0 28px rgba(0, 0, 0, 0.12);
+  animation: slideIn 0.35s var(--ease-smooth);
   z-index: 10;
 }
 
@@ -94,6 +105,17 @@
   to {
     transform: translateX(0);
     opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 

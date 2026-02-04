@@ -2,38 +2,40 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding: 0 4px;
 }
 
 .empty-state {
   color: var(--apple-text-secondary);
-  font-size: 13px;
+  font-size: 14px;
   text-align: center;
-  padding: 40px 20px;
-  font-weight: 500;
+  padding: 48px 24px;
+  font-weight: 400;
+  line-height: 1.6;
 }
 
 .doc-item {
-  padding: 10px 12px;
-  margin-bottom: 2px;
-  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 4px;
+  border-radius: 10px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   background: transparent;
   border: 1px solid transparent;
 }
 
 .doc-item:hover {
-  background: rgba(0, 122, 255, 0.06);
+  background: rgba(0, 122, 255, 0.08);
   border-color: rgba(0, 122, 255, 0.15);
 }
 
 .doc-item.active {
-  background: rgba(0, 122, 255, 0.1);
-  border: 1px solid rgba(0, 122, 255, 0.25);
-  box-shadow: 0 1px 4px rgba(0, 122, 255, 0.12);
+  background: rgba(0, 122, 255, 0.12);
+  border: 1px solid rgba(0, 122, 255, 0.3);
+  box-shadow: 0 2px 6px rgba(0, 122, 255, 0.15);
 }
 
 .doc-info {
@@ -44,19 +46,20 @@
 
 .doc-item h3 {
   margin: 0 0 4px 0;
-  font-size: 14px;
+  font-size: 15px;
   color: var(--apple-text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: 600;
+  letter-spacing: 0.2px;
 }
 
 .doc-item p {
   margin: 0;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--apple-text-secondary);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .doc-actions {
@@ -72,16 +75,17 @@
 }
 
 .action-btn {
-  background: rgba(0, 0, 0, 0.05);
-  border: none;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   cursor: pointer;
-  font-size: 14px;
+  font-size: 15px;
   padding: 6px 8px;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 1;
 }
 
 .duplicate-btn {
@@ -90,6 +94,7 @@
 
 .duplicate-btn:hover {
   background: rgba(0, 122, 255, 0.15);
+  border-color: rgba(0, 122, 255, 0.3);
   transform: scale(1.1);
 }
 
@@ -99,5 +104,6 @@
 
 .delete-btn:hover {
   background: rgba(255, 45, 85, 0.15);
+  border-color: rgba(255, 45, 85, 0.3);
   transform: scale(1.1);
 }
