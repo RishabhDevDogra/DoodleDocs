@@ -185,15 +185,16 @@ function DocumentEditor({ document: doc, onUpdate, onToggleHistory, showHistory,
 
   const drawShape = (x1, y1, x2, y2) => {
     const ctx = contextRef.current;
+    const mode = drawModeRef.current;
     ctx.beginPath();
     
-    if (drawMode === 'rectangle') {
+    if (mode === 'rectangle') {
       ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
-    } else if (drawMode === 'circle') {
+    } else if (mode === 'circle') {
       const radius = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
       ctx.arc(x1, y1, radius, 0, 2 * Math.PI);
       ctx.stroke();
-    } else if (drawMode === 'line') {
+    } else if (mode === 'line') {
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
       ctx.stroke();
