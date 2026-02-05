@@ -17,6 +17,8 @@ function TopNavbar({ userName, documentTitle, onTitleChange, onShare, onNewDoodl
           value={documentTitle}
           onChange={(e) => onTitleChange(e.target.value)}
           placeholder="Untitled Docs"
+          autoComplete="off"
+          spellCheck="false"
         />
       </div>
 
@@ -27,16 +29,16 @@ function TopNavbar({ userName, documentTitle, onTitleChange, onShare, onNewDoodl
           onClick={onNewDoodle}
           title="Create new doodle"
         >
-          <span>✨</span>
-          <span>New Doodle</span>
+          <span className="btn-icon">✨</span>
+          <span className="btn-text">New Doodle</span>
         </button>
         <button 
           className="navbar-share-btn"
           onClick={onShare}
           title="Share this doodle"
         >
-          <span>🔗</span>
-          <span>Share</span>
+          <span className="btn-icon">🔗</span>
+          <span className="btn-text">Share</span>
         </button>
       </div>
     </nav>

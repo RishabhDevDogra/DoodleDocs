@@ -86,7 +86,7 @@ function VersionHistory({ documentId, onRevert, userName, onClose }) {
               <div className="event-content">
                 <div className="event-description">{event.description}</div>
                 <div className="event-meta">
-                  <span className="event-user">{userName}</span>
+                  <span className="event-user">{event.userName || 'Unknown'}</span>
                   <span className="event-time">{formatTime(event.occurredAt)}</span>
                 </div>
               </div>

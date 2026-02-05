@@ -20,6 +20,10 @@ function DocumentEditor({ document: doc, onUpdate, onToggleHistory, showHistory,
   const [snapshot, setSnapshot] = useState(null);
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
+  const isDrawingRef = useRef(false);
+  const drawModeRef = useRef('brush');
+  const startPosRef = useRef(null);
+  const snapshotRef = useRef(null);
 
   useEffect(() => {
     setTitle(doc.title);
@@ -140,36 +144,40 @@ function DocumentEditor({ document: doc, onUpdate, onToggleHistory, showHistory,
     if (!point) return;
     const { x, y } = point;
     setIsDrawing(true);
+    isDrawingRef.current = true;
     setStartPos({ x, y });
+    startPosRef.current = { x, y };
     
-    if (drawMode === 'brush') {
+    if (drawModeRef.current === 'brush') {
       contextRef.current.beginPath();
       contextRef.current.moveTo(x, y);
     } else {
       // Save canvas state for shape drawing
-      setSnapshot(canvasRef.current.toDataURL());
+      const snap = canvasRef.current.toDataURL();
+      setSnapshot(snap);
+      snapshotRef.current = snap;
     }
   };
 
   const draw = (event) => {
-    if (!isDrawing) return;
+    if (!isDrawingRef.current) return;
     event.preventDefault?.();
     const point = getCanvasPoint(event);
     if (!point) return;
     const { x, y } = point;
     
-    if (drawMode === 'brush') {
+    if (drawModeRef.current === 'brush') {
       contextRef.current.lineTo(x, y);
       contextRef.current.stroke();
     } else {
       // Restore snapshot and draw shape
-      if (snapshot) {
+      if (snapshotRef.current && startPosRef.current) {
         const img = new Image();
-        img.src = snapshot;
+        img.src = snapshotRef.current;
         img.onload = () => {
           contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
           contextRef.current.drawImage(img, 0, 0);
-          drawShape(startPos.x, startPos.y, x, y);
+          drawShape(startPosRef.current.x, startPosRef.current.y, x, y);
         };
       }
     }
@@ -194,15 +202,17 @@ function DocumentEditor({ document: doc, onUpdate, onToggleHistory, showHistory,
 
   const stopDrawing = (event) => {
     event?.preventDefault?.();
-    if (contextRef.current && drawMode === 'brush') {
+    if (contextRef.current && drawModeRef.current === 'brush') {
       contextRef.current.closePath();
     }
-    if (isDrawing) {
+    if (isDrawingRef.current) {
       // Save after drawing stops
       setTimeout(() => handleSave(), CANVAS_SAVE_DELAY_MS);
     }
     setIsDrawing(false);
+    isDrawingRef.current = false;
     setSnapshot(null);
+    snapshotRef.current = null;
   };
 
   useEffect(() => {
@@ -224,7 +234,12 @@ function DocumentEditor({ document: doc, onUpdate, onToggleHistory, showHistory,
       canvas.removeEventListener('touchend', onTouchEnd);
       canvas.removeEventListener('touchcancel', onTouchEnd);
     };
-  }, [startDrawing, draw, stopDrawing]);
+  }, []); // Empty deps - handlers use refs
+
+  // Keep drawMode ref in sync
+  useEffect(() => {
+    drawModeRef.current = drawMode;
+  }, [drawMode]);
 
   const clearCanvas = () => {
     if (canvasRef.current && contextRef.current) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import * as signalR from '@microsoft/signalr';
 import { API_URL, HUB_URL, SIGNALR_RECONNECT_DELAYS, SIGNALR_STARTUP_DELAY_MS } from './config';
 import './App.css';
@@ -22,6 +22,8 @@ function App() {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const isEditingRef = useRef(false);
+  const titleSaveTimerRef = useRef(null);
 
   // Initialize user session on mount
   useEffect(() => {
@@ -58,7 +60,8 @@ function App() {
     connection.on('DocumentUpdated', (documentId) => {
       console.log('Document updated:', documentId);
       fetchDocuments(); // Refresh document list
-      if (selectedDocId === documentId) {
+      // Only refresh selected doc if we're not actively editing it
+      if (selectedDocId === documentId && !isEditingRef.current) {
         fetchDocument(documentId); // Refresh selected document
       }
     });
@@ -123,10 +126,11 @@ function App() {
 
   const createNewDocument = async () => {
     try {
+      const { userId, userName: uname } = getOrCreateUserId();
       const res = await fetch(`${API_URL}/api/document`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: 'Untitled Doodle' })
+        body: JSON.stringify({ title: 'Untitled Doodle', userId, userName: uname })
       });
       const newDoc = await res.json();
       setDocuments([newDoc, ...documents]);
@@ -138,13 +142,17 @@ function App() {
 
   const updateDocument = async (id, title, content) => {
     try {
+      const { userId, userName: uname } = getOrCreateUserId();
       const res = await fetch(`${API_URL}/api/document/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, content })
+        body: JSON.stringify({ title, content, userId, userName: uname })
       });
       const updated = await res.json();
-      setSelectedDoc(updated);
+      // Only update state if we're not actively editing
+      if (!isEditingRef.current) {
+        setSelectedDoc(updated);
+      }
       setDocuments(documents.map(d => d.id === id ? updated : d));
     } catch (err) {
       console.error('Error updating document:', err);
@@ -153,12 +161,19 @@ function App() {
 
   const handleTitleChange = (newTitle) => {
     if (selectedDoc) {
+      isEditingRef.current = true;
       setSelectedDoc({ ...selectedDoc, title: newTitle });
+      
+      // Clear previous timer
+      if (titleSaveTimerRef.current) {
+        clearTimeout(titleSaveTimerRef.current);
+      }
+      
       // Debounce the actual save
-      const timer = setTimeout(() => {
-        updateDocument(selectedDoc.id, newTitle, selectedDoc.content);
+      titleSaveTimerRef.current = setTimeout(async () => {
+        await updateDocument(selectedDoc.id, newTitle, selectedDoc.content);
+        isEditingRef.current = false;
       }, 500);
-      return () => clearTimeout(timer);
     }
   };
 
@@ -177,17 +192,18 @@ function App() {
 
   const duplicateDocument = async (docToDupe) => {
     try {
+      const { userId, userName: uname } = getOrCreateUserId();
       const res = await fetch(`${API_URL}/api/document`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: `${docToDupe.title} (Copy)` })
+        body: JSON.stringify({ title: `${docToDupe.title} (Copy)`, userId, userName: uname })
       });
       const newDoc = await res.json();
       // Copy content from original
       await fetch(`${API_URL}/api/document/${newDoc.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: `${docToDupe.title} (Copy)`, content: docToDupe.content })
+        body: JSON.stringify({ title: `${docToDupe.title} (Copy)`, content: docToDupe.content, userId, userName: uname })
       });
       setDocuments([newDoc, ...documents]);
       setSelectedDocId(newDoc.id);
@@ -201,7 +217,7 @@ function App() {
       <div className="app-wrapper">
         <TopNavbar 
           userName={userName} 
-          documentTitle={selectedDoc?.title || 'Untitled Masterpiece'}
+          documentTitle={selectedDoc?.title ?? ''}
           onTitleChange={handleTitleChange}
           onShare={() => setIsShareModalOpen(true)}
           onNewDoodle={createNewDocument}

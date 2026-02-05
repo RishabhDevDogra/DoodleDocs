@@ -58,7 +58,9 @@ public class DocumentService
             Version = e.Version,
             EventType = e.GetType().Name,
             Description = GetEventDescription(e),
-            OccurredAt = e.OccurredAt
+            OccurredAt = e.OccurredAt,
+            UserId = GetEventUserId(e),
+            UserName = GetEventUserName(e)
         }).ToList();
     }
 
@@ -102,13 +104,37 @@ public class DocumentService
         };
     }
 
+    private string GetEventUserId(Domain.DomainEvent @event)
+    {
+        return @event switch
+        {
+            Domain.DocumentCreated created => created.UserId,
+            Domain.ContentUpdated updated => updated.UserId,
+            Domain.TitleUpdated titleUpdated => titleUpdated.UserId,
+            Domain.DocumentDeleted deleted => deleted.UserId,
+            _ => string.Empty
+        };
+    }
+
+    private string GetEventUserName(Domain.DomainEvent @event)
+    {
+        return @event switch
+        {
+            Domain.DocumentCreated created => created.UserName,
+            Domain.ContentUpdated updated => updated.UserName,
+            Domain.TitleUpdated titleUpdated => titleUpdated.UserName,
+            Domain.DocumentDeleted deleted => deleted.UserName,
+            _ => string.Empty
+        };
+    }
+
     /// <summary>
     /// Create a new document.
     /// </summary>
-    public async Task<DocumentProjection?> CreateDocumentAsync(string title = "Untitled Document")
+    public async Task<DocumentProjection?> CreateDocumentAsync(string title = "Untitled Document", string userId = "", string userName = "")
     {
         var documentId = Guid.NewGuid().ToString();
-        var aggregate = DocumentAggregate.Create(documentId, title);
+        var aggregate = DocumentAggregate.Create(documentId, title, userId, userName);
 
         var events = aggregate.GetUncommittedChanges().ToList();
         await _eventStore.SaveEventsAsync(documentId, events);
@@ -129,7 +155,7 @@ public class DocumentService
     /// Update document (title and/or content).
     /// Generates events that are persisted and projected.
     /// </summary>
-    public async Task<DocumentProjection?> UpdateDocumentAsync(string id, string title, string content)
+    public async Task<DocumentProjection?> UpdateDocumentAsync(string id, string title, string content, string userId = "", string userName = "")
     {
         var events = await _eventStore.GetEventsAsync(id);
         if (events.Count == 0)
@@ -139,10 +165,10 @@ public class DocumentService
 
         // Commands that generate events
         if (aggregate.Title != title)
-            aggregate.UpdateTitle(title);
+            aggregate.UpdateTitle(title, userId, userName);
         
         if (aggregate.Content != content)
-            aggregate.UpdateContent(content);
+            aggregate.UpdateContent(content, userId, userName);
 
         var newEvents = aggregate.GetUncommittedChanges().ToList();
         if (newEvents.Count > 0)
@@ -166,14 +192,14 @@ public class DocumentService
     /// Delete a document.
     /// Generates a DocumentDeleted event and removes projection.
     /// </summary>
-    public async Task<bool> DeleteDocumentAsync(string id)
+    public async Task<bool> DeleteDocumentAsync(string id, string userId = "", string userName = "")
     {
         var events = await _eventStore.GetEventsAsync(id);
         if (events.Count == 0)
             return false;
 
         var aggregate = DocumentAggregate.FromEvents(events);
-        aggregate.Delete();
+        aggregate.Delete(userId, userName);
 
         var deleteEvent = aggregate.GetUncommittedChanges().ToList();
         await _eventStore.SaveEventsAsync(id, deleteEvent);

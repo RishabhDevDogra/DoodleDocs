@@ -57,7 +57,7 @@ public class DocumentController : ControllerBase
         if (string.IsNullOrWhiteSpace(request.Title))
             return BadRequest("Title cannot be empty");
 
-        var doc = await _documentService.CreateDocumentAsync(request.Title);
+        var doc = await _documentService.CreateDocumentAsync(request.Title, request.UserId, request.UserName);
         return CreatedAtAction(nameof(GetDocument), new { id = doc?.Id }, doc);
     }
 
@@ -72,7 +72,7 @@ public class DocumentController : ControllerBase
 
         try
         {
-            var doc = await _documentService.UpdateDocumentAsync(id, request.Title, request.Content);
+            var doc = await _documentService.UpdateDocumentAsync(id, request.Title, request.Content, request.UserId, request.UserName);
             return Ok(doc);
         }
         catch (KeyNotFoundException)
@@ -82,12 +82,12 @@ public class DocumentController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteDocument(string id)
+    public async Task<ActionResult> DeleteDocument(string id, [FromQuery] string userId = "", [FromQuery] string userName = "")
     {
         if (string.IsNullOrWhiteSpace(id))
             return BadRequest("Document ID is required");
             
-        if (await _documentService.DeleteDocumentAsync(id))
+        if (await _documentService.DeleteDocumentAsync(id, userId, userName))
             return Ok();
         return NotFound();
     }

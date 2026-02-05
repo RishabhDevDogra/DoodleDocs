@@ -34,7 +34,7 @@ public class DocumentAggregate
     /// <summary>
     /// Create a new document via command.
     /// </summary>
-    public static DocumentAggregate Create(string documentId, string title)
+    public static DocumentAggregate Create(string documentId, string title, string userId = "", string userName = "")
     {
         var agg = new DocumentAggregate
         {
@@ -43,7 +43,7 @@ public class DocumentAggregate
             UpdatedAt = DateTime.UtcNow
         };
 
-        var @event = new DocumentCreated(documentId, title);
+        var @event = new DocumentCreated(documentId, title, userId, userName);
         agg.Apply(@event);
         agg._changes.Add(@event);
 
@@ -53,9 +53,9 @@ public class DocumentAggregate
     /// <summary>
     /// Update document content (text or drawing).
     /// </summary>
-    public void UpdateContent(string content, string contentType = "text")
+    public void UpdateContent(string content, string userId = "", string userName = "", string contentType = "text")
     {
-        var @event = new ContentUpdated(Id, content, contentType);
+        var @event = new ContentUpdated(Id, content, contentType, userId, userName);
         Apply(@event);
         _changes.Add(@event);
     }
@@ -63,9 +63,9 @@ public class DocumentAggregate
     /// <summary>
     /// Update document title.
     /// </summary>
-    public void UpdateTitle(string newTitle)
+    public void UpdateTitle(string newTitle, string userId = "", string userName = "")
     {
-        var @event = new TitleUpdated(Id, newTitle);
+        var @event = new TitleUpdated(Id, newTitle, userId, userName);
         Apply(@event);
         _changes.Add(@event);
     }
@@ -73,9 +73,9 @@ public class DocumentAggregate
     /// <summary>
     /// Mark document as deleted.
     /// </summary>
-    public void Delete()
+    public void Delete(string userId = "", string userName = "")
     {
-        var @event = new DocumentDeleted(Id);
+        var @event = new DocumentDeleted(Id, userId, userName);
         Apply(@event);
         _changes.Add(@event);
     }

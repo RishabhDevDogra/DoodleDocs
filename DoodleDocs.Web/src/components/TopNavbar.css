@@ -102,6 +102,9 @@
   font-weight: 600;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 12px rgba(175, 82, 222, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .navbar-new-btn:hover {
@@ -223,7 +226,24 @@
 
   .navbar-new-btn,
   .navbar-share-btn {
-    flex: 1;
+    padding: 8px 12px;
     min-height: 40px;
+    min-width: 44px;
+    justify-content: center;
+  }
+
+  .navbar-new-btn .btn-text,
+  .navbar-share-btn .btn-text {
+    display: none;
+  }
+
+  .navbar-new-btn .btn-icon,
+  .navbar-share-btn .btn-icon {
+    font-size: 16px;
+  }
+
+  .navbar-doc-title {
+    font-size: 14px;
+    padding: 8px 10px;
   }
 }

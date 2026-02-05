@@ -8,11 +8,15 @@ namespace DoodleDocs.Domain;
 public class DocumentCreated : DomainEvent
 {
     public string Title { get; set; } = string.Empty;
+    public string UserId { get; set; } = string.Empty;
+    public string UserName { get; set; } = string.Empty;
 
-    public DocumentCreated(string documentId, string title)
+    public DocumentCreated(string documentId, string title, string userId = "", string userName = "")
     {
         DocumentId = documentId;
         Title = title;
+        UserId = userId;
+        UserName = userName;
     }
 
     public DocumentCreated() { }
@@ -25,12 +29,16 @@ public class ContentUpdated : DomainEvent
 {
     public string Content { get; set; } = string.Empty;
     public string ContentType { get; set; } = "text"; // "text" or "drawing"
+    public string UserId { get; set; } = string.Empty;
+    public string UserName { get; set; } = string.Empty;
 
-    public ContentUpdated(string documentId, string content, string contentType = "text")
+    public ContentUpdated(string documentId, string content, string contentType = "text", string userId = "", string userName = "")
     {
         DocumentId = documentId;
         Content = content;
         ContentType = contentType;
+        UserId = userId;
+        UserName = userName;
     }
 
     public ContentUpdated() { }
@@ -42,11 +50,15 @@ public class ContentUpdated : DomainEvent
 public class TitleUpdated : DomainEvent
 {
     public string NewTitle { get; set; } = string.Empty;
+    public string UserId { get; set; } = string.Empty;
+    public string UserName { get; set; } = string.Empty;
 
-    public TitleUpdated(string documentId, string newTitle)
+    public TitleUpdated(string documentId, string newTitle, string userId = "", string userName = "")
     {
         DocumentId = documentId;
         NewTitle = newTitle;
+        UserId = userId;
+        UserName = userName;
     }
 
     public TitleUpdated() { }
@@ -57,9 +69,14 @@ public class TitleUpdated : DomainEvent
 /// </summary>
 public class DocumentDeleted : DomainEvent
 {
-    public DocumentDeleted(string documentId)
+    public string UserId { get; set; } = string.Empty;
+    public string UserName { get; set; } = string.Empty;
+
+    public DocumentDeleted(string documentId, string userId = "", string userName = "")
     {
         DocumentId = documentId;
+        UserId = userId;
+        UserName = userName;
     }
 
     public DocumentDeleted() { }

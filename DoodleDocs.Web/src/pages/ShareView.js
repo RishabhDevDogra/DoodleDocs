@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import * as signalR from '@microsoft/signalr';
 import { API_URL, HUB_URL, SIGNALR_RECONNECT_DELAYS, SIGNALR_STARTUP_DELAY_MS } from '../config';
@@ -17,6 +17,8 @@ function ShareView() {
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const isEditingRef = useRef(false);
+  const titleSaveTimerRef = useRef(null);
 
   useEffect(() => {
     const { userName: uname } = getOrCreateUserId();
@@ -36,7 +38,7 @@ function ShareView() {
     }, SIGNALR_STARTUP_DELAY_MS);
 
     connection.on('DocumentUpdated', (updatedDocId) => {
-      if (updatedDocId === documentId) {
+      if (updatedDocId === documentId && !isEditingRef.current) {
         fetchDocument(documentId);
       }
     });
@@ -71,14 +73,18 @@ function ShareView() {
 
   const updateDocument = async (id, title, content) => {
     try {
+      const { userId, userName: uname } = getOrCreateUserId();
       const res = await fetch(`${API_URL}/api/document/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, content })
+        body: JSON.stringify({ title, content, userId, userName: uname })
       });
       if (res.ok) {
         const updated = await res.json();
-        setSelectedDoc(updated);
+        // Only update state if we're not actively editing
+        if (!isEditingRef.current) {
+          setSelectedDoc(updated);
+        }
       }
     } catch (err) {
       console.error('Error updating document:', err);
@@ -87,11 +93,19 @@ function ShareView() {
 
   const handleTitleChange = (newTitle) => {
     if (selectedDoc) {
+      isEditingRef.current = true;
       setSelectedDoc({ ...selectedDoc, title: newTitle });
-      const timer = setTimeout(() => {
-        updateDocument(selectedDoc.id, newTitle, selectedDoc.content);
+      
+      // Clear previous timer
+      if (titleSaveTimerRef.current) {
+        clearTimeout(titleSaveTimerRef.current);
+      }
+      
+      // Debounce the actual save
+      titleSaveTimerRef.current = setTimeout(async () => {
+        await updateDocument(selectedDoc.id, newTitle, selectedDoc.content);
+        isEditingRef.current = false;
       }, 500);
-      return () => clearTimeout(timer);
     }
   };
 
@@ -118,7 +132,7 @@ function ShareView() {
       <div className="share-wrapper">
         <TopNavbar 
           userName={userName} 
-          documentTitle={selectedDoc.title || 'Untitled Masterpiece'}
+          documentTitle={selectedDoc.title ?? ''}
           onTitleChange={handleTitleChange}
           onShare={() => {}}
           onNewDoodle={() => window.location.href = '/'}
