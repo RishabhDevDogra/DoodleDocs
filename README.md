@@ -209,6 +209,56 @@ DoodleDocs/
 
 ---
 
+## ⚙️ How It Works (No Auth, No Database)
+
+This is a **reference implementation** for learning Event Sourcing. It intentionally keeps things simple:
+
+### User Session
+- **No authentication** - Everyone gets a random username (e.g., "Artist#4832")
+- **Local storage** - Your session ID is stored in browser localStorage
+- **Shared namespace** - All documents are visible to all users in the session
+
+### Data Storage
+- **In-memory Event Store** - Events live in RAM (lost on server restart)
+- **No SQL database** - Perfect for learning, not production
+- **All documents are public** - Anyone on the network can see them
+
+### Testing Real-time Collaboration
+
+To see real-time updates in action:
+
+1. **Open the app normally:**
+   ```
+   http://localhost:3000
+   ```
+
+2. **Open an incognito/private window (same URL):**
+   ```
+   Ctrl+Shift+N (or Cmd+Shift+N on Mac)
+   http://localhost:3000
+   ```
+   Or open on a **different device** on the same network.
+
+3. **Get a shared link:**
+   - Click "Share" button → Copy the link
+   - Paste in the other window/device
+   - Both clients now see **live updates** as either user draws
+
+**Example Scenario:**
+- Window A: You as "Artist#4832" 
+- Window B: You as "Artist#5019" (different random name)
+- Draw in A → Instantly appears in B via SignalR ✨
+
+### When to Upgrade This
+
+For production use, replace:
+- **Event Store** → PostgreSQL/SQL Server with event persistence
+- **In-Memory Projections** → Dedicated read database (MongoDB, Elasticsearch)
+- **Session** → JWT authentication with user identity
+- **Deployment** → Azure/AWS with load balancers
+
+---
+
 ## 🎓 Architecture Deep Dive
 
 ### Event Sourcing Pattern
