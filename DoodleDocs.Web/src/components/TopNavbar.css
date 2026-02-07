@@ -262,7 +262,8 @@
 
   .navbar-new-btn .btn-text,
   .navbar-share-btn .btn-text {
-    display: none;
+    display: inline;
+    font-size: 11px;
   }
 
   .navbar-new-btn .btn-icon,
