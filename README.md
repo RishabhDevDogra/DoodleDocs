@@ -237,7 +237,7 @@ To see real-time updates in action:
    Ctrl+Shift+N (or Cmd+Shift+N on Mac)
    http://localhost:3000
    ```
-   Or open on a **different device** on the same network.
+   Or open on a **different device** 
 
 3. **Get a shared link:**
    - Click "Share" button → Copy the link
@@ -245,8 +245,8 @@ To see real-time updates in action:
    - Both clients now see **live updates** as either user draws
 
 **Example Scenario:**
-- Window A: You as "Artist#4832" 
-- Window B: You as "Artist#5019" (different random name)
+- Window A: You as A
+- Window B: You as B (different random name)
 - Draw in A → Instantly appears in B via SignalR ✨
 
 ### When to Upgrade This
