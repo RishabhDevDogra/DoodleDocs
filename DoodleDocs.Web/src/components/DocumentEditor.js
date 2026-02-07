@@ -59,21 +59,23 @@ function DocumentEditor({ document: doc, onUpdate, onToggleHistory, showHistory,
       context.strokeStyle = brushColor;
       contextRef.current = context;
 
-      // Load existing drawing from content if it exists
+      // Load existing drawing from content if it exists (non-blocking)
       if (content && content.includes('data:image')) {
-        const match = content.match(/src="(data:image[^"]*)"/);
+        const match = content.match(/src="(data:image[^"]*)"/);  
         if (match && match[1]) {
-          const img = new Image();
-          img.onload = () => {
-            // Clear canvas first then draw the image
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            context.drawImage(img, 0, 0);
-            console.log('Canvas updated with new drawing');
-          };
-          img.onerror = () => {
-            console.error('Failed to load image');
-          };
-          img.src = match[1];
+          // Use requestAnimationFrame to load image asynchronously
+          requestAnimationFrame(() => {
+            const img = new Image();
+            img.onload = () => {
+              // Clear canvas first then draw the image
+              context.clearRect(0, 0, canvas.width, canvas.height);
+              context.drawImage(img, 0, 0);
+            };
+            img.onerror = () => {
+              console.warn('Failed to load canvas image');
+            };
+            img.src = match[1];
+          });
         }
       }
     }

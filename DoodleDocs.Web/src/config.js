@@ -10,4 +10,4 @@ export const CANVAS_SAVE_DELAY_MS = 500;
 
 // SignalR configuration
 export const SIGNALR_RECONNECT_DELAYS = [1000, 2000, 5000, 10000];
-export const SIGNALR_STARTUP_DELAY_MS = 500;
+export const SIGNALR_STARTUP_DELAY_MS = 200; // Reduced from 500ms for faster canvas loading

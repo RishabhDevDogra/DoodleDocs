@@ -100,6 +100,7 @@ function App() {
   // Fetch document details when selected
   useEffect(() => {
     if (selectedDocId) {
+      // Fetch document without waiting (background task)
       fetchDocument(selectedDocId);
     }
   }, [selectedDocId]);

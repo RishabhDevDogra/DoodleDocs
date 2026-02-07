@@ -28,16 +28,18 @@ function TopNavbar({ userName, documentTitle, onTitleChange, onShare, onNewDoodl
           className="navbar-new-btn"
           onClick={onNewDoodle}
           title="Create new doodle"
+          aria-label="Create new doodle"
         >
-          <span className="btn-icon">✨</span>
+          <span className="btn-icon" aria-hidden="true">✨</span>
           <span className="btn-text">New Doodle</span>
         </button>
         <button 
           className="navbar-share-btn"
           onClick={onShare}
           title="Share this doodle"
+          aria-label="Share this doodle"
         >
-          <span className="btn-icon">🔗</span>
+          <span className="btn-icon" aria-hidden="true">🔗</span>
           <span className="btn-text">Share</span>
         </button>
       </div>
